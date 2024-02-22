@@ -1,18 +1,22 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\UserController;
+
+Route::prefix('user')->group(function () {
+    Route::get('/', 'App\Http\Controllers\UserController@index')->name('user.index');
+});
+
+
+Route::get('/login', [LoginController::class, 'showLoginForm']);
+Route::get('/auth/google', [LoginController::class, 'redirectToGoogle']);
+Route::get('/auth/google/callback', [LoginController::class, 'handleGoogleCallback']);
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
