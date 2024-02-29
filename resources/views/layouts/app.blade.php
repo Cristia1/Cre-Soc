@@ -14,6 +14,11 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        window.APP_URL = '{{ config('app.url') }}';
+    </script>
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
@@ -21,12 +26,11 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    {{ config('app.name', 'CreativeSocial') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
@@ -35,6 +39,7 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
+                        <!-- Authentication Links -->
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
@@ -55,9 +60,17 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    @if (Auth::user()->googleAccount)
+                                        <a class="dropdown-item" href="{{ url('/dashboard') }}">
+                                            {{ __('Dashboard') }}
+                                        </a>
+                                    @endif
+
+                                    <!-- Adăugați aici alte link-uri sau opțiuni pentru conturile adiționale -->
+
                                     <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                        onclick="event.preventDefault();
+                                                    document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
 
@@ -67,6 +80,7 @@
                                 </div>
                             </li>
                         @endguest
+
                     </ul>
                 </div>
             </div>
@@ -76,5 +90,6 @@
             @yield('content')
         </main>
     </div>
+    <script src=""{{ asset('js/app.js')}}></script>
 </body>
 </html>

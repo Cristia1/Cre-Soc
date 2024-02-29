@@ -15,6 +15,8 @@ class CreateUsersTable extends Migration
                 $table->string('name');
                 $table->string('email')->unique();
                 $table->string('password');
+                $table->string('google_user_id')->unique();
+                $table->string('google_user_email');
                 $table->timestamps();
             });
         }

@@ -65,6 +65,13 @@ return [
         'null' => [
             'driver' => 'null',
         ],
+        'socket_io' => [
+            'driver' => 'socket.io',
+            'url' => env('SOCKET_IO_URL'),
+            'options' => [
+                //
+            ],
+        ],
 
     ],
 

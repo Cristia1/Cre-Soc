@@ -16,7 +16,7 @@ class CreateLikesTable extends Migration
             $table->unsignedBigInteger('comment_id');
             $table->unsignedBigInteger('profile_id');
             $table->unsignedBigInteger('friend_id');
-            $table->unsignedBigInteger('notification_id')
+            $table->unsignedBigInteger('notification_id');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
