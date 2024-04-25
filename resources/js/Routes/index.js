@@ -18,7 +18,7 @@ const router = createRouter({
         { path: '/', redirect: '/MainLayout' },
         { path: '/MainLayout', name: 'MainLayout', component: MainLayout },
         { path: '/Logout', component: Logout },
-        // { path: '/auth/google/callback', redirect: '/MainLayout' },
+        { path: '/auth/google/callback', redirect: '/MainLayout' },
         //  End Components
     ]
 });

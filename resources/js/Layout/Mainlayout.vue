@@ -39,7 +39,7 @@
       },
       async logout() {
         try {
-          await axios.post('/api/logout');
+          await axios.post('/logout');
           window.location.href = '/login';
         } catch (error) {
           console.error('Error during logout:', error);
