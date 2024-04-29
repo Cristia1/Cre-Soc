@@ -15,7 +15,7 @@ class GoogleController extends Controller
 {
     // public function loginWithGoogle()
     // {
-    //     return Socialite::driver('google')->redirect();
+    //     return Socialite::driver('MainLayout')->redirect();
     // }
 
 
@@ -24,7 +24,7 @@ class GoogleController extends Controller
     // {
     //     if (Auth::check()) {
             
-    //         return redirect()->to('/main-layout');
+    //         return redirect()->to('/MainLayout');
     //     }
 
     //     try {

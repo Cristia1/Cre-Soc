@@ -6,7 +6,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('Login') }}</div>
-                <a href="{{ url('/google') }}" class="btn btn-success">Login with Google </a>
+                <!-- <a href="{{ url('/google') }}" class="btn btn-success">Login with Google </a> -->
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
                         @csrf

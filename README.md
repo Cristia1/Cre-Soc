@@ -1,9 +1,9 @@
 # To set up the project, users need to run the following commands
 
 
-1. # Install Laravel Socialite
+<!-- 1. # Install Laravel Socialite
     composer require laravel/socialite
-(After that make your Setup Google App | OAuth 2.0 client);
+(After that make your Setup Google App | OAuth 2.0 client); -->
 
 2. # Installl Laravel UI
     composer require laravel/ui
