@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('photos', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->text('description');
+            $table->string('description')->nullable();
             $table->timestamps();
-            $table->string('image_path'); 
+            $table->string('image'); 
+            $table->integer('position_x')->nullable();
+            $table->integer('position_y')->nullable();
 
             $table->foreign('user_id')->references('id')->on('users');
         });
@@ -28,5 +30,7 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('photos');
+        $table->dropColumn('position_x');
+        $table->dropColumn('position_y');
     }
 };

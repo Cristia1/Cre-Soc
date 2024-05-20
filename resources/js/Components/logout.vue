@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button class="btn-success w3-border w3-border-red w3-round-large" @click="logout">Logout</button>
+        <!-- <button class="btn-success w3-border w3-border-red w3-round-large" @click="logout">Logout</button> -->
     </div>
 </template>
 
@@ -13,7 +13,7 @@ export default {
         async logout() {
             console.log('Logout function called.');
             try {
-                await axios.get('/logout');
+                await axios.post('/logout');
                 window.location.replace('/login');
                 window.location.reload();
             } catch (error) {

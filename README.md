@@ -7,13 +7,17 @@
 
 2. # Installl Laravel UI
     composer require laravel/ui
-
-3. # Install NPM
     npm install
+
+3. # Install Vue Croppa
+    npm install vue-croppa --save
+
+    
 
 4. # Install Vue 
     npm install vue@latest
     npm install vue-router
+    
 
 5. # Install Axios
     npm install axios
@@ -25,5 +29,5 @@
 7. # Install Sanctum
     composer require laravel/sanctum
 
-
+    
 8. # Install

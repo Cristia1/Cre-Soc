@@ -1,12 +1,11 @@
 <?php
 
 namespace App\Models;
-
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class User extends Authenticatable
 {
-    
     protected $fillable = [
         'name', 
         'email', 
@@ -20,13 +19,11 @@ class User extends Model
         'password', 'remember_token',
     ];
 
-    
     public function posts()
     {
         return $this->hasMany(Post::class);
     }
 
- 
     public function friends()
     {
         return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id');

@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    
     public function up()
     {
         Schema::create('profiles', function (Blueprint $table) {
@@ -25,7 +23,9 @@ return new class extends Migration
             $table->text('favorite_sports');
             $table->text('favorite_books');
             $table->timestamps(); 
+            $table->unsignedBigInteger('friends_id'); 
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('friends_id')->references('id')->on('friends')->onDelete('cascade');
         });
     }
 
