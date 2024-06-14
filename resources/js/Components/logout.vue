@@ -11,11 +11,14 @@ import axios from 'axios';
 export default {
     methods: {
         async logout() {
+            
             console.log('Logout function called.');
             try {
+                console.log('merge');
                 await axios.post('/logout');
+                // window.location.reload();
                 window.location.replace('/login');
-                window.location.reload();
+                
             } catch (error) {
                 console.error('Error during logout:', error);
             }

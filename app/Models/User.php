@@ -3,9 +3,13 @@
 namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
+
 
 class User extends Authenticatable
 {
+    use HasApiTokens;
+
     protected $fillable = [
         'name', 
         'email', 
@@ -28,4 +32,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id');
     }
+
+    public function photo()
+    {
+        return $this->hasOne(Photo::class);
+    }
+
 }

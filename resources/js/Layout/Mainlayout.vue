@@ -3,13 +3,9 @@
     <header>
       <nav class="navbar navbar-expand-lg navbar-light rounded" style="background-color: #4267B2; margin-bottom: 10px; height: 40px;">
         <div class="container">
-          <a class="navbar-brand" href="">
+          <a class="navbar-brand" href="profile">
             <img src="/logo.png" alt="Logo" style="height: 40px;">
           </a>
-
-            <ul>
-              <router-link to="/profile"  class="Profile">Profile</router-link>
-            </ul>
 
             <ul class="navbar-nav ml-auto">
                 <div class="dropdown-menu dropdown-menu-right" :class="{ 'show': isDropdownOpen }">
@@ -32,12 +28,12 @@
 
 <script>
 import axios from 'axios';
-import logout from "../Components/logout.vue";
+// import logout from "../Components/logout.vue";
 import Profile from "../Pages/Profiles/Profile.vue";
 
 export default {
   components: {
-    logout,
+    // logout,
     Profile,
   },
   data() {
@@ -51,7 +47,6 @@ export default {
     },
     async logout() {
       try {
-        location.reload();
         await axios.post('/logout');
         location.reload();
         window.location.href = '/login';

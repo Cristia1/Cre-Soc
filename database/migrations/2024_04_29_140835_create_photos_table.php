@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
     {
         Schema::create('photos', function (Blueprint $table) {
@@ -20,17 +17,12 @@ return new class extends Migration
             $table->integer('position_x')->nullable();
             $table->integer('position_y')->nullable();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down()
     {
         Schema::dropIfExists('photos');
-        $table->dropColumn('position_x');
-        $table->dropColumn('position_y');
     }
 };

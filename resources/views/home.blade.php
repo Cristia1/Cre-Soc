@@ -5,6 +5,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    @if (Auth::check())
+        <meta name="user-id" content="{{ Auth::id() }}">
+    @endif
     <title>Laravel 10 and Vue 3</title>
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">

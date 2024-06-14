@@ -4,9 +4,18 @@ import { createRouter, createWebHistory } from 'vue-router';
 // Components Reusaile
 import MainLayout from "../Layout/Mainlayout.vue";
 import Logout from "../Components/logout.vue";
-import PhotoCover from "../Components/PhotoCover.vue"
+import Home from "../Components/Home.vue";
+import google from "../Components/google.vue"
 import InputError  from "../Components/InputError.vue";
+import UserId from "../Pages/Users/UserId.vue";
 //  End Components
+
+
+// Components Photos
+import PhotoCover from "../Pages/Photos/PhotoCover.vue";
+import PhotoProfil from "../Pages/Photos/PhotoProfil.vue";
+// Ends
+
 
 
 // Profile Components
@@ -19,11 +28,19 @@ const router = createRouter({
         // Components Reusabile
         { path: '/', redirect: '/MainLayout' },
         { path: '/MainLayout', name: 'MainLayout', component: MainLayout },
+        { path: '/home', component: Home },
+        { path: '/google', component: google },
         { path: '/Logout', component: Logout },
         { path: '/auth/google/callback', redirect: '/MainLayout' },
-        { path: '/PhotoCover', component: PhotoCover },
         { path: '/InputError', component: InputError },
+        { path: '/UserId', component: UserId },
         //  End Components
+
+
+        // Photos Components
+        { path: '/PhotoProfil', component: PhotoProfil },
+        { path: '/PhotoCover', component: PhotoCover },
+        // 
 
 
         // Profile Components

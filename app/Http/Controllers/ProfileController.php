@@ -10,15 +10,17 @@ class ProfileController extends Controller
 {
     public function show()
     {
-        $profile = Auth::user();
-        return response()->json(['user' => $profile]);
+        $data = [];
+        return response()->json($data, 200);
     }
+
 
     public function edit()
     {
         $profile = Auth::user();
         return response()->json(['user' => $profile]);
     }
+
 
     public function update(Request $request)
     {
@@ -37,6 +39,7 @@ class ProfileController extends Controller
         return response()->json(['message' => 'Profile updated successfully.']);
     }
 
+    
     public function biography()
     {
         $profile = Auth::user();
