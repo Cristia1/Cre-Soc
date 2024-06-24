@@ -55,7 +55,7 @@ export default {
     },
     async fetchUserPhoto() {
       try {
-        const response = await axios.get('/cover-photo');
+        const response = await axios.get('/CoverPhoto');
         if (response.data.success) {
           this.imageUrl = response.data.imageUrl;
           localStorage.setItem('userImageUrl', this.imageUrl);

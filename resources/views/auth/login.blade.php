@@ -6,7 +6,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('Login') }}</div>
-                 <!-- <a href="{{ route('google') }}" class="btn btn-custom">Log in with
+                 <a href="{{ route('google') }}" class="btn btn-custom">Log in with
                     <span style="color: #4285f4; font-size: 20px;">G</span>
                     <span style="color: #ea4335; font-size: 23px;">o</span>
                     <span style="color: #fbbc04; font-size: 23px;">o</span>
@@ -14,7 +14,7 @@
                     <span style="color: #34a853; font-size: 23px;">l</span>
                     <span style="color: #ea4335; font-size: 23px;">e</span>
                     
-                </a> -->
+                </a>
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
                         @csrf

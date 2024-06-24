@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
-// use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\ProfileController;
@@ -11,12 +11,14 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 
 
-Route::middleware(['api', 'auth'])->group(function () {
+Route::middleware(['api'])->group(function () {
     // Photos Routes
-        Route::get('/photos', [PhotoController::class, 'index']);
-        Route::post('/photos', [PhotoController::class, 'store']);
-        Route::get('/photos/{id}', [PhotoController::class, 'show']);
-        Route::put('/photos/{id}', [PhotoController::class, 'update']);
+        Route::get('/photo', [PhotoController::class, 'index']);
+        Route::post('/photo', [PhotoController::class, 'store']);
+        Route::get('/photo/{id}', [PhotoController::class, 'show']);
+        Route::put('/photo/{id}', [PhotoController::class, 'update']);
+        Route::delete('/photo/{id}', [PhotoController::class, 'destroy']);
+        Route::get('/CoverPhoto', [PhotoController::class, 'PhotoCover']);
     // End Routes
 
     //Profiles Routes
@@ -37,13 +39,13 @@ Route::middleware(['api', 'auth'])->group(function () {
     Route::post('/logout', [LoginController::class, 'logout']);
     Auth::routes();
     Route::get('{any}', function () {
-        return view('app');
+        return view('home');
     })->where('any', '.*');
 });
 
 
 Route::post('/login', [LoginController::class, 'login']);
-// Route::get('/google/callback', [GoogleController::class, 'handleGoogleCallback']);
-// Route::get('/google', [GoogleController::class, 'loginWithGoogle'])->name('google');
+Route::get('/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+Route::get('/google', [GoogleController::class, 'loginWithGoogle'])->name('google');
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);

@@ -21,7 +21,6 @@ class PhotoController extends Controller
         return response()->json($photo);
     }
 
-
     public function store(Request $request)
     {
         $request->validate([
@@ -53,7 +52,6 @@ class PhotoController extends Controller
         return response()->json(['success' => true, 'imageUrl' => $imageUrl]);
     }
 
-
     public function update(Request $request, $id)
     {
         $photo = Photo::findOrFail($id);
@@ -70,7 +68,6 @@ class PhotoController extends Controller
         return response()->json(['success' => true, 'message' => 'Photo updated successfully.']);
     }
 
-
     public function destroy($id)
     {
         $photo = Photo::findOrFail($id);
@@ -80,8 +77,7 @@ class PhotoController extends Controller
         return response()->json(['success' => true, 'message' => 'Photo deleted successfully.']);
     }
 
-
-    public function coverPhoto()
+    public function PhotoCover()
     {
         $photo = Photo::where('user_id', Auth::id())->first(); 
         if ($photo) {

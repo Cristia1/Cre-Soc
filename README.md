@@ -30,4 +30,6 @@
     composer require laravel/sanctum
 
     
-8. # Install
+8. # Must make storage link for imageUrl
+    php artisan storage:link
+

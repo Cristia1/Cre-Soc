@@ -12,7 +12,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-        return response()->json(['success' => true, 'users' => $users])
+        return response()->json(['success' => true, 'users' => $users])''
     }
 
     public function show($id)
