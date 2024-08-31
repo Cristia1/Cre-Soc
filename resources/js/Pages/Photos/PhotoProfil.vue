@@ -1,12 +1,10 @@
 <template>
-  <div class="photo-profile">
-    <label for="image-upload" class="custom-file-upload">
-      <input id="image-upload" type="file" accept="image/*" @change="uploadProfilePhoto">
-      <div class="profile-image" v-if="imageUrl">
-        <img :src="imageUrl" alt="Profile Image">
-      </div>
-      <div class="add-image" v-else>
-        Add Profile Image
+  <div class="photo-profil">
+    <label for="profil" class="custom-file-upload">
+      <div class="add-image" v-if="!profilUrl">Add a Profil</div>
+      <input id="profil" type="file" accept="image/*" @change="handleProfilUpload">
+      <div class="profil-image" v-if="profilUrl">
+        <img :src="profilUrl" alt="profil">
       </div>
     </label>
     <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
@@ -14,9 +12,10 @@
   </div>
 </template>
 
+
 <script>
 import axios from 'axios';
-import UserId from '../Users/UserId.vue';
+import UserId from "../Users/UserId.vue";
 
 export default {
   components: {
@@ -24,29 +23,30 @@ export default {
   },
   data() {
     return {
-      imageUrl: null,
+      profilUrl: null,
       errorMessage: '',
       userId: null,
     };
   },
   mounted() {
-    this.fetchProfilePhoto();
+    this.fetchUserPhoto('profil'); 
   },
   methods: {
-    async uploadProfilePhoto(event) {
+    async handleProfilUpload(event) {
       if (event.target.files.length === 0) {
-        return console.log('No file selected');
+        console.log('No file selected');
+        return;
       }
+      
       const file = event.target.files[0];
       const formData = new FormData();
       formData.append('image', file);
-      formData.append('type', 'profile');
-
+      formData.append('type', 'profil'); 
       try {
-        const response = await axios.post('/photos', formData);
+        const response = await axios.post('/photo', formData);
         if (response.data.success) {
-          localStorage.setItem('profileImageUrl', response.data.imageUrl);
-          this.imageUrl = response.data.imageUrl;
+          localStorage.setItem('profilUrl', response.data.profilUrl);
+          this.profilUrl = response.data.profilUrl;
           this.errorMessage = ''; 
         } else {
           this.errorMessage = 'Error uploading image';
@@ -56,71 +56,30 @@ export default {
         this.errorMessage = 'Error uploading image';
       }
     },
-    async fetchProfilePhoto() {
+    async fetchUserPhoto(type) {
       try {
-        const response = await axios.get('/photos/type/profile');
+        const response = await axios.get(`/PhotoProfil`);
         if (response.data.success) {
-          this.imageUrl = response.data.imageUrl;
-          localStorage.setItem('profileImageUrl', this.imageUrl);
+          this.profilUrl = response.data.profilUrl;
+          localStorage.setItem(`${type}ProfilUrl`, this.profilUrl);
           this.errorMessage = '';
         } else {
           this.errorMessage = 'No image found';
         }
       } catch (error) {
-        console.error('Error fetching profile photo:', error);
-        this.errorMessage = 'Error fetching profile photo';
+        console.error('Error fetching user photo:', error);
+        this.errorMessage = 'Error fetching user photo';
       }
     },
     handleUserIdReceived(userId) {
       this.userId = userId;
-      this.fetchProfilePhoto();
+      this.fetchUserPhoto('profil'); 
     },
   },
 };
 </script>
 
+
 <style scoped>
-.photo-profile {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
-.custom-file-upload {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 8px 16px;
-  border: 2px dashed #1877f2;
-  border-radius: 50%;
-  width: 150px;
-  height: 150px;
-  overflow: hidden;
-  position: relative;
-}
-
-.custom-file-upload input[type="file"] {
-  display: none;
-}
-
-.profile-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-.add-image {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  font-size: 14px;
-  color: #1877f2;
-  font-weight: bold;
-  text-align: center;
-}
+@import '@/Assets/PhotoProfil';
 </style>

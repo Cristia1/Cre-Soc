@@ -1,16 +1,13 @@
 <template>
-  <div class="profile">
-    <!-- Cover image -->
-    <PhotoCover class="cover-photo"></PhotoCover>
-    <!-- Profile picture -->
-    <div class="profile-photo"></div>
-    
-    <!-- Name and other details -->
+  <div class="profile1">
+    <PhotoCover class="profile2"></PhotoCover>
+      <PhotoProfil class="photo-profil"></PhotoProfil>
+
     <div class="details">
       <h1>{{ user.name }}</h1>
-      <p>{{ user.bio }}</p>
+        <p>{{ user.bio }}</p>
       <!-- Other details such as work, school, etc. -->
-      <p>{{ user.job }}</p>
+          <p>{{ user.job }}</p>
       <p>{{ user.school }}</p>
     </div>
     
@@ -18,23 +15,26 @@
     <div class="posts">
       <div class="post" v-for="post in user.posts" :key="post.id">
         <p>{{ post.content }}</p>
-        <img :src="post.image" alt="Post Image">
+          <img :src="post.image" alt="Post Image">
       </div>
     </div>
   </div>
 </template>
 
+
 <script>
 import PhotoCover  from '../Photos/PhotoCover.vue';
+import PhotoProfil from '../Photos/PhotoProfil.vue';
 
 export default {
   components: {
     PhotoCover,
+    PhotoProfil,
   },
   data() {
     return {
       user: {
-        name: "Cristian Cristian ",
+        name: "Alesio Albert Rares",
         bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
         job: "Software Developer",
         school: "Harvard University",
@@ -50,5 +50,5 @@ export default {
 </script>
 
 <style scoped>
-@import '@/Assets/Components';
+@import '@/Assets/Profile';
 </style>

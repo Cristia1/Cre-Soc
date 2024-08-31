@@ -12,10 +12,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('description')->nullable();
-            $table->timestamps();
-            $table->string('image'); 
+            $table->string('type');
+            $table->string('image');
             $table->integer('position_x')->nullable();
             $table->integer('position_y')->nullable();
+            $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

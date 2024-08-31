@@ -1,11 +1,11 @@
 <template>
-  <div class="profile-cover">
-    <label for="image-upload" class="custom-file-upload">
-      Add an image
-      <input id="image-upload" type="file" accept="image/*" @change="handleImageUpload">
+  <div class="photo-cover">
+    <label for="cover" class="custom-file-upload" style='font-size:10px'>
+      &#128247;Add an Cover
+      <input id="cover" type="file" accept="image/*" @change="handleCoverUpload">
     </label>
-    <div class="cover-image" v-if="imageUrl">
-      <img :src="imageUrl" alt="Image loaded">
+    <div class="cover-image" v-if="coverUrl">
+      <img :src="coverUrl" alt="cover">
     </div>
     <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
     <UserId @user-id-received="handleUserIdReceived" />
@@ -22,28 +22,30 @@ export default {
   },
   data() {
     return {
-      imageUrl: null,
+      coverUrl: null,
       errorMessage: '',
       userId: null,
     };
   },
   mounted() {
-    this.fetchUserPhoto();
+    this.fetchUserPhoto('cover'); 
   },
   methods: {
-    async handleImageUpload(event) {
+    async handleCoverUpload(event) {
       if (event.target.files.length === 0) {
-        return console.log('No file selected');
+        console.log('No file selected');
+        return;
       }
       const file = event.target.files[0];
       const formData = new FormData();
       formData.append('image', file);
+      formData.append('type', 'cover'); 
 
       try {
-        const response = await axios.post('/photos', formData);
+        const response = await axios.post('/photo', formData);
         if (response.data.success) {
-          localStorage.setItem('userImageUrl', response.data.imageUrl);
-          this.imageUrl = response.data.imageUrl;
+          localStorage.setItem('coverUrl', response.data.coverUrl);
+          this.coverUrl = response.data.coverUrl;
           this.errorMessage = ''; 
         } else {
           this.errorMessage = 'Error uploading image';
@@ -53,12 +55,12 @@ export default {
         this.errorMessage = 'Error uploading image';
       }
     },
-    async fetchUserPhoto() {
+    async fetchUserPhoto(type) {
       try {
-        const response = await axios.get('/CoverPhoto');
+        const response = await axios.get(`/PhotoCover`);
         if (response.data.success) {
-          this.imageUrl = response.data.imageUrl;
-          localStorage.setItem('userImageUrl', this.imageUrl);
+          this.coverUrl = response.data.coverUrl;
+          localStorage.setItem(`${type}CoverUrl`, this.coverUrl);
           this.errorMessage = '';
         } else {
           this.errorMessage = 'No image found';
@@ -70,13 +72,12 @@ export default {
     },
     handleUserIdReceived(userId) {
       this.userId = userId;
-      this.fetchUserPhoto();
+      this.fetchUserPhoto('cover'); 
     },
   },
 };
 </script>
 
-
 <style scoped>
-@import '@/Assets/Components';
+@import '@/Assets/PhotoCover';
 </style>

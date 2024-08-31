@@ -6,12 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    
     public function up()
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->unique();
+            $table->unsignedBigInteger('user_id');
             $table->string('city');
             $table->string('work');
             $table->date('birthdate');
@@ -22,16 +21,13 @@ return new class extends Migration
             $table->text('favorite_movies');
             $table->text('favorite_sports');
             $table->text('favorite_books');
-            $table->timestamps(); 
-            $table->unsignedBigInteger('friends_id'); 
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('friends_id')->references('id')->on('friends')->onDelete('cascade');
+            $table->timestamps();
+            
+            // Foreign key constraints
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down()
     {
         Schema::dropIfExists('profiles');

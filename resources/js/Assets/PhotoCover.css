@@ -1,0 +1,78 @@
+/* PhotoCover.vue */
+.profile-cover {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.custom-file-upload {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    cursor: pointer;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #1877f2;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.custom-file-upload input[type="file"] {
+    display: none;
+}
+
+.cover-image {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.cover-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.photo-cover {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.custom-file-upload {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    cursor: pointer;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #1877f2;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.custom-file-upload input[type="file"] {
+    display: none;
+}
+
+.cover-image {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.cover-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.error-message {
+    color: red;
+    margin-top: 10px;
+}
+/* Ends */

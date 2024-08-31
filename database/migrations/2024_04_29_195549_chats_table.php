@@ -4,9 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ChatsTable extends Migration
+return new class extends Migration
 {
-
     public function up()
     {
         Schema::create('chats', function (Blueprint $table) {
@@ -15,13 +14,12 @@ class ChatsTable extends Migration
             $table->unsignedBigInteger('recipient_id');
             $table->timestamps();
 
-            $table->foreign('sender_id')->references('id')->on('users');
-            $table->foreign('recipient_id')->references('id')->on('recipients');
+            $table->foreign('sender_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('recipient_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
-   
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('chats');
     }

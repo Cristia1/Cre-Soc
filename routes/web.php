@@ -18,7 +18,9 @@ Route::middleware(['api'])->group(function () {
         Route::get('/photo/{id}', [PhotoController::class, 'show']);
         Route::put('/photo/{id}', [PhotoController::class, 'update']);
         Route::delete('/photo/{id}', [PhotoController::class, 'destroy']);
-        Route::get('/CoverPhoto', [PhotoController::class, 'PhotoCover']);
+        Route::get('/PhotoCover', [PhotoController::class, 'PhotoCover']);
+        Route::get('/PhotoProfil', [PhotoController::class, 'PhotoProfil']);
+ 
     // End Routes
 
     //Profiles Routes
@@ -33,6 +35,7 @@ Route::middleware(['api'])->group(function () {
     Route::get('/users', [UserController::class, 'index']);
     Route::get('/users/{id}', [UserController::class, 'show']);
     Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::get('/user', [UserController::class, 'getUser']);
     // End Routes
 
 

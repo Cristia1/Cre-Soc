@@ -6,23 +6,23 @@
 
 
 <script>
-import axios from 'axios';
+// import axios from 'axios';
 
-export default {
-    methods: {
-        async logout() {
+// export default {
+//     methods: {
+//         async logout() {
             
-            console.log('Logout function called.');
-            try {
-                console.log('merge');
-                await axios.post('/logout');
-                // window.location.reload();
-                window.location.replace('/login');
+//             console.log('Logout function called.');
+//             try {
+//                 console.log('merge');
+//                 await axios.post('/logout');
+//                 window.location.reload();
+//                 window.location.replace('/login');
                 
-            } catch (error) {
-                console.error('Error during logout:', error);
-            }
-        },
-    },
-};
+//             } catch (error) {
+//                 console.error('Error during logout:', error);
+//             }
+//         },
+//     },
+// };
 </script>

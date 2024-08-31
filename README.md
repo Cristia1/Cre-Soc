@@ -1,35 +1,18 @@
-# To set up the project, users need to run the following commands
+1.Clone the repository from GitLab: git clone <repository_url>
 
+2.Crate an .env file
 
-1. # Install Laravel Socialite
-    composer require laravel/socialite
-(After that make your Setup Google App | OAuth 2.0 client);
+3.Configuration all dependences
 
-2. # Installl Laravel UI
-    composer require laravel/ui
-    npm install
-    yarn dev
-    php artisan key:generate
-
-3. # Install Vue Croppa
-    npm install vue-croppa --save
-
-4. # Install Vue 
-    npm install vue@latest
-    npm install vue-router
-    
-
-5. # Install Axios
-    npm install axios
-
-6. # Install Vite
-    npm install @vitejs/plugin-vue
-    
-
-7. # Install Sanctum
-    composer require laravel/sanctum
-
-    
-8. # Must make storage link for imageUrl
-    php artisan storage:link
-
+    - Composer install
+    - Npm install
+    - Composer require laravel/ui
+    - Php artisan key:generate
+    - Npm install -g yarn
+    - Yarn dev install
+    - Npm install vue-croppa --save
+    - Npm install vue@latest
+    - Npm install vue-router
+    - Npm install @vitejs/plugin-vue
+    - Composer require laravel/sanctum
+    - Php artisan storage:link

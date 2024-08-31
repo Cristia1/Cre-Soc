@@ -1,7 +1,7 @@
 <template>
   <div>
     <header>
-      <nav class="navbar navbar-expand-lg navbar-light rounded" style="background-color: #4267B2; margin-bottom: 10px; height: 40px;">
+      <nav class="navbar navbar-expand-lg navbar-light rounded" style="background-color: #3d3d3d; margin-bottom: 10px; height: 40px;">
         <div class="container">
           <a class="navbar-brand" href="profile">
             <img src="/logo.png" alt="Logo" style="height: 40px;">
@@ -28,12 +28,10 @@
 
 <script>
 import axios from 'axios';
-// import logout from "../Components/logout.vue";
 import Profile from "../Pages/Profiles/Profile.vue";
 
 export default {
   components: {
-    // logout,
     Profile,
   },
   data() {
@@ -48,7 +46,7 @@ export default {
     async logout() {
       try {
         await axios.post('/logout');
-        location.reload();
+        // location.reload();
         window.location.href = '/login';
       } catch (error) {
         console.error('Error during logout:', error);
@@ -59,26 +57,5 @@ export default {
 </script>
 
 <style scoped>
-.dropdown-menu {
-  position: absolute;
-  right: 0;
-}
-
-.navbar {
-  border-radius: 9px; 
-  left: 3px;
-  margin-right: -07px;
-  margin-left: -07px;
-  margin-top: -5px;
-}
-
-.Profile {
-  background-color: #bc2e2e; 
-  color: #333; 
-  font-family: 'Arial', sans-serif; 
-  padding: 1px; 
-
-
-
-}
+@import '@/Assets/MainLayout';
 </style>
