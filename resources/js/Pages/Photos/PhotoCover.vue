@@ -1,7 +1,7 @@
 <template>
   <div class="photo-cover">
     <label for="cover" class="custom-file-upload" style='font-size:10px'>
-      &#128247;Add an Cover
+      &#128247;Add a Cover
       <input id="cover" type="file" accept="image/*" @change="handleCoverUpload">
     </label>
     <div class="cover-image" v-if="coverUrl">
@@ -28,7 +28,12 @@ export default {
     };
   },
   mounted() {
-    this.fetchUserPhoto('cover'); 
+    const storedCoverUrl = localStorage.getItem('coverUrl');
+    if (storedCoverUrl) {
+      this.coverUrl = storedCoverUrl;
+    } else {
+      this.fetchUserPhoto('cover');
+    }
   },
   methods: {
     async handleCoverUpload(event) {
@@ -43,12 +48,17 @@ export default {
 
       try {
         const response = await axios.post('/photo', formData);
-        if (response.data.success) {
-          localStorage.setItem('coverUrl', response.data.coverUrl);
-          this.coverUrl = response.data.coverUrl;
-          this.errorMessage = ''; 
+        if (response.data.success === false) {
+          // If the image is found
+          this.coverUrl = null; 
+          localStorage.removeItem('coverUrl'); 
+          this.errorMessage = 'No image found';
         } else {
-          this.errorMessage = 'Error uploading image';
+         // If the image is found and loaded correctly
+          const coverUrl = `${response.data.imageUrl}?t=${new Date().getTime()}`; 
+          this.coverUrl = coverUrl;
+          localStorage.setItem('coverUrl', coverUrl);
+          this.errorMessage = '';
         }
       } catch (error) {
         console.error('Error uploading image:', error);
@@ -58,12 +68,17 @@ export default {
     async fetchUserPhoto(type) {
       try {
         const response = await axios.get(`/PhotoCover`);
-        if (response.data.success) {
-          this.coverUrl = response.data.coverUrl;
-          localStorage.setItem(`${type}CoverUrl`, this.coverUrl);
-          this.errorMessage = '';
-        } else {
+        if (response.data.success === false) {
+          /// If the image is found
+          this.coverUrl = null; 
+          localStorage.removeItem('coverUrl'); 
           this.errorMessage = 'No image found';
+        } else {
+           // If the image is found
+          const coverUrl = `${response.data.coverUrl}?t=${new Date().getTime()}`;
+          this.coverUrl = coverUrl;
+          localStorage.setItem('coverUrl', coverUrl); 
+          this.errorMessage = '';
         }
       } catch (error) {
         console.error('Error fetching user photo:', error);

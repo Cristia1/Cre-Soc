@@ -28,35 +28,41 @@ class PhotoController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'type' => 'required|in:cover,profil',
         ]);
-    
+
         $userId = Auth::id();
         if (!$userId) {
             return response()->json(['success' => false, 'message' => 'User is not authenticated']);
         }
-    
+
+        // Generate a unique file name for the image
         $filename = $userId . '_' . time() . '.' . $request->file('image')->getClientOriginalExtension();
         $path = $request->file('image')->storeAs('public/photos/' . $userId, $filename);
-    
+
         $type = $request->input('type');
-    
+
+       
+        // Checks if an image of the same type already exists for this user
         $photo = Photo::where('user_id', $userId)->where('type', $type)->first();
-    
+        
         if ($photo) {
+            // Delete the old image from storage
             Storage::delete($photo->image);
             $photo->image = $path;
             $photo->save();
         } else {
+            // Create a new database entry for the image
             $photo = new Photo();
             $photo->user_id = $userId;
             $photo->type = $type;
             $photo->image = $path;
             $photo->save();
         }
-    
+
         $imageUrl = Storage::url($path);
-    
+
         return response()->json(['success' => true, 'imageUrl' => $imageUrl]);
     }
+
     
     public function update(Request $request, $id)
     {
@@ -88,18 +94,19 @@ class PhotoController extends Controller
         $userId = auth()->id();
         $photo = Photo::where('user_id', $userId)->where('type', 'cover')->first();
         if ($photo) {
-            $coverUrl = Storage::url($photo->image);
+            
+            $coverUrl = Storage::url($photo->image) . '?t=' . time(); 
             return response()->json(['success' => true, 'coverUrl' => $coverUrl]);
         } else {
             return response()->json(['success' => false, 'message' => 'No cover image found']);
         }
     }
 
+
     public function PhotoProfil(): JsonResponse
     {
         $userId = auth()->id();
         $photo = Photo::where('user_id', $userId)->where('type', 'profil')->first();
-
         if ($photo) {
             $profilUrl = Storage::url($photo->image);
             return response()->json(['success' => true, 'profilUrl' => $profilUrl]);

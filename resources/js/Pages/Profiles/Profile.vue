@@ -4,13 +4,14 @@
       <PhotoProfil class="photo-profil"></PhotoProfil>
 
     <div class="details">
+       
       <h1>{{ user.name }}</h1>
         <p>{{ user.bio }}</p>
       <!-- Other details such as work, school, etc. -->
           <p>{{ user.job }}</p>
       <p>{{ user.school }}</p>
     </div>
-    
+    <!-- <UserId></UserId>  -->
     <!-- User Posts -->
     <div class="posts">
       <div class="post" v-for="post in user.posts" :key="post.id">
@@ -18,18 +19,22 @@
           <img :src="post.image" alt="Post Image">
       </div>
     </div>
+    
   </div>
+ 
 </template>
 
 
 <script>
 import PhotoCover  from '../Photos/PhotoCover.vue';
 import PhotoProfil from '../Photos/PhotoProfil.vue';
+// import UserId from '../Users/UserId.vue';
 
 export default {
   components: {
     PhotoCover,
     PhotoProfil,
+    // UserId,
   },
   data() {
     return {
