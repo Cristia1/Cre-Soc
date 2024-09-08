@@ -8,6 +8,12 @@ use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\LikeController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\RecipientController;
+use App\Http\Controllers\SenderController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -20,10 +26,20 @@ Route::middleware(['api'])->group(function () {
         Route::delete('/photo/{id}', [PhotoController::class, 'destroy']);
         Route::get('/PhotoCover', [PhotoController::class, 'PhotoCover']);
         Route::get('/PhotoProfil', [PhotoController::class, 'PhotoProfil']);
- 
+        Route::post('/photos/{photo}/like', [LikeController::class, 'likePhoto'])->middleware('auth');
     // End Routes
 
+
+    // Like Routes
+        // Rute pentru like-uri, gestionate de LikeController
+        Route::post('/like/{itemType}/{id}', [LikeController::class, 'like']);
+        Route::delete('/unlike/{itemType}/{id}', [LikeController::class, 'unlike']);
+        Route::get('/likes/{itemType}/{id}', [LikeController::class, 'getLikes']);
+    // End routes 
+
+    
     //Profiles Routes
+        Route::get('/user/{id}/photos', [ProfileController::class, 'getUserPhotos']);
         Route::get('/Profile', [ProfileController::class, 'show'])->name('show');
         Route::get('/Profile/edit', [ProfileController::class, 'edit'])->name('edit');
         Route::post('/Profile/update', [ProfileController::class, 'update'])->name('update');  

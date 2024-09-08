@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('type');
             $table->string('image');
+            $table->boolean('is_primary')->default(false);
             $table->integer('position_x')->nullable();
             $table->integer('position_y')->nullable();
             $table->timestamps();

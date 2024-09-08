@@ -23,7 +23,7 @@ export default {
       axios.get('/user-id')
         .then(response => {
           this.userId = response.data.userId;
-          console.log('User ID from API:', this.userId);
+          // console.log('User ID from API:', this.userId);
           this.$emit('user-id-received', this.userId);
         })
         .catch(error => {

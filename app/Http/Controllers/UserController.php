@@ -4,15 +4,34 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Models\User;
+use App\Models\Photo;
+
 
 class UserController extends Controller
 {
-    public function index()
+
+    public function index(Request $request)
     {
-        $users = User::all();
+        $query = $request->input('query');
+        $users = User::where('name', 'like', "%$query%")->get(['id', 'name']);
+
+        foreach ($users as $user) {
+            $photo = Photo::where('user_id', $user->id)->where('type', 'profil')->first();
+            if ($photo && Storage::exists($photo->image)) {
+                $user->profilUrl = Storage::url($photo->image);
+            } else {
+                $user->profilUrl = '/default-profile.png'; 
+            }
+        }
+
+        // Returnăm răspunsul JSON cu utilizatorii și poza de profil
         return response()->json(['success' => true, 'users' => $users]);
-    }
+}
+
+
+
 
     public function show($id)
     {

@@ -17,3 +17,66 @@
     font-family: "Arial", sans-serif;
     padding: 1px;
 }
+
+/* Style for search icon */
+.search-input {
+    width: 200px;
+    padding: 10px 15px;
+    border-radius: 20px;
+    border: 1px solid #342f2f;
+    background-color: #292d32;
+    /* color: #fdf6f6 !important; */
+    transition: width 0.4s ease-in-out;
+    position: relative;
+    top: -43px;
+    margin-left: 40px;
+}
+
+.search-input:focus {
+    width: 200px;
+    outline: none;
+    border-color: #fcfcfc;
+    box-shadow: 0px 0px 10px rgba(232, 242, 245, 0.925);
+    color: #fdfdfd !important;
+}
+
+.input-group-text {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.input-group-text i {
+    color: #ffffff !important;
+    transition: color 0.2s;
+}
+
+.input-group-text:hover i {
+    color: #ffffff;
+}
+/* Search Css */
+.search-results {
+    margin-top: 20px;
+}
+
+.user-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.user-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.user-details h5 {
+    margin: 0;
+}
+
+.user-details p {
+    margin: 0;
+    color: #666;
+}

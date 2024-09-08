@@ -27,6 +27,7 @@ class PhotoController extends Controller
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'type' => 'required|in:cover,profil',
+            'is_primary' => 'nullable|boolean',
         ]);
 
         $userId = Auth::id();
@@ -39,29 +40,33 @@ class PhotoController extends Controller
         $path = $request->file('image')->storeAs('public/photos/' . $userId, $filename);
 
         $type = $request->input('type');
+        $isPrimary = $request->input('is_primary', false); // default: false
 
-       
-        // Checks if an image of the same type already exists for this user
-        $photo = Photo::where('user_id', $userId)->where('type', $type)->first();
-        
-        if ($photo) {
-            // Delete the old image from storage
-            Storage::delete($photo->image);
-            $photo->image = $path;
-            $photo->save();
-        } else {
-            // Create a new database entry for the image
-            $photo = new Photo();
-            $photo->user_id = $userId;
-            $photo->type = $type;
-            $photo->image = $path;
-            $photo->save();
+        // Dacă nu există altă imagine primară pentru acest tip, setăm imaginea curentă ca primară
+        $existingPrimaryPhoto = Photo::where('user_id', $userId)->where('type', $type)->where('is_primary', true)->first();
+        if (!$existingPrimaryPhoto) {
+            $isPrimary = true; // Setăm imaginea ca primară dacă nu există alta
         }
+
+        if ($isPrimary) {
+            // Dacă imaginea este marcată ca primară, facem celelalte imagini non-primare
+            Photo::where('user_id', $userId)->where('type', $type)->update(['is_primary' => false]);
+        }
+
+        // Salvăm noua imagine
+        $photo = new Photo();
+        $photo->user_id = $userId;
+        $photo->type = $type;
+        $photo->image = $path;
+        $photo->is_primary = $isPrimary;
+        $photo->save();
 
         $imageUrl = Storage::url($path);
 
         return response()->json(['success' => true, 'imageUrl' => $imageUrl]);
     }
+
+
 
     
     public function update(Request $request, $id)
@@ -83,30 +88,66 @@ class PhotoController extends Controller
     public function destroy($id)
     {
         $photo = Photo::findOrFail($id);
+        if ($photo->is_primary) {
+            $replacementPhoto = Photo::where('user_id', $photo->user_id)
+                ->where('type', $photo->type)
+                ->where('id', '!=', $photo->id)
+                ->orderBy('created_at', 'desc')
+                ->first();
+    
+            if ($replacementPhoto) {
+                $replacementPhoto->is_primary = true;
+                $replacementPhoto->save();
+            } else {
+                Photo::where('user_id', $photo->user_id)
+                    ->where('type', $photo->type)
+                    ->update(['is_primary' => false]);
+            }
+        }
+    
         Storage::delete($photo->image);
         $photo->delete();
-
+    
         return response()->json(['success' => true, 'message' => 'Photo deleted successfully.']);
     }
+    
 
     public function PhotoCover(): JsonResponse
     {
         $userId = auth()->id();
-        $photo = Photo::where('user_id', $userId)->where('type', 'cover')->first();
+        $photo = Photo::where('user_id', $userId)
+                    ->where('type', 'cover')
+                    ->where('is_primary', true) 
+                    ->first();
+        if (!$photo) {
+            $photo = Photo::where('user_id', $userId)
+                        ->where('type', 'cover')
+                        ->orderBy('created_at', 'desc')
+                        ->first();
+        }
+    
         if ($photo) {
-            
             $coverUrl = Storage::url($photo->image) . '?t=' . time(); 
             return response()->json(['success' => true, 'coverUrl' => $coverUrl]);
         } else {
             return response()->json(['success' => false, 'message' => 'No cover image found']);
         }
     }
-
-
+    
     public function PhotoProfil(): JsonResponse
     {
         $userId = auth()->id();
-        $photo = Photo::where('user_id', $userId)->where('type', 'profil')->first();
+        $photo = Photo::where('user_id', $userId)
+                    ->where('type', 'profil')
+                    ->where('is_primary', true) 
+                    ->first();
+        if (!$photo) {
+            $photo = Photo::where('user_id', $userId)
+                        ->where('type', 'profil')
+                        ->orderBy('created_at', 'desc')
+                        ->first();
+        }
+    
         if ($photo) {
             $profilUrl = Storage::url($photo->image);
             return response()->json(['success' => true, 'profilUrl' => $profilUrl]);

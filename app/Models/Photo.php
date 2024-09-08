@@ -19,12 +19,10 @@ class Photo extends Model
 
     public $timestamps = true;
 
-
     public function isCover()
     {
         return $this->type === 'cover';
     }
-
 
     public function isProfile()
     {
@@ -35,4 +33,31 @@ class Photo extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+
+    public function hasLikeFromUser($userId)
+    {
+        return $this->likes()->where('user_id', $userId)->exists();
+    }
+
+    public function likeCount()
+    {
+        return $this->likes()->count();
+    }
+
 }

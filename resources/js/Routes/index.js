@@ -17,10 +17,15 @@ import PhotoProfil from "../Pages/Photos/PhotoProfil.vue";
 // Ends
 
 
-
 // Profile Components
 import Profile from "../Pages/Profiles/Profile.vue";
 //  End Components
+
+
+// Components Likes
+import LikeButton from "../Pages/Likes/LikeButton.vue";
+// End Components
+
 
 const router = createRouter({
     history: createWebHistory(),

@@ -8,6 +8,15 @@
       <img :src="coverUrl" alt="cover">
     </div>
     <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+    
+    <div v-if="userId && coverUrl && photoId !== null && initialLiked !== undefined && initialLikesCount !== undefined">
+          <LikeButton
+            itemType="photo"
+            :itemId="photoId"
+            :initialLiked="initialLiked"
+            :initialLikesCount="initialLikesCount"
+          />
+      </div>
     <UserId @user-id-received="handleUserIdReceived" />
   </div>
 </template>
@@ -15,16 +24,21 @@
 <script>
 import axios from 'axios';
 import UserId from "../Users/UserId.vue";
+import LikeButton from '../Likes/LikeButton.vue';
 
 export default {
   components: {
     UserId,
+    LikeButton,
   },
   data() {
     return {
       coverUrl: null,
       errorMessage: '',
       userId: null,
+      photoId: null,
+      initialLiked: false,
+      initialLikesCount: 0,
     };
   },
   mounted() {
@@ -49,14 +63,15 @@ export default {
       try {
         const response = await axios.post('/photo', formData);
         if (response.data.success === false) {
-          // If the image is found
           this.coverUrl = null; 
           localStorage.removeItem('coverUrl'); 
           this.errorMessage = 'No image found';
         } else {
-         // If the image is found and loaded correctly
           const coverUrl = `${response.data.imageUrl}?t=${new Date().getTime()}`; 
           this.coverUrl = coverUrl;
+          this.photoId = response.data.photoId;  
+          this.initialLiked = response.data.liked; 
+          this.initialLikesCount = response.data.likesCount; 
           localStorage.setItem('coverUrl', coverUrl);
           this.errorMessage = '';
         }
@@ -69,14 +84,15 @@ export default {
       try {
         const response = await axios.get(`/PhotoCover`);
         if (response.data.success === false) {
-          /// If the image is found
           this.coverUrl = null; 
           localStorage.removeItem('coverUrl'); 
           this.errorMessage = 'No image found';
         } else {
-           // If the image is found
           const coverUrl = `${response.data.coverUrl}?t=${new Date().getTime()}`;
           this.coverUrl = coverUrl;
+          this.photoId = response.data.photoId; 
+          this.initialLiked = response.data.liked; 
+          this.initialLikesCount = response.data.likesCount; 
           localStorage.setItem('coverUrl', coverUrl); 
           this.errorMessage = '';
         }

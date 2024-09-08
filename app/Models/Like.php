@@ -33,5 +33,15 @@ class Like extends Model
     {
         return $this->belongsTo(Photo::class);
     }
+
+    public function likeable()
+    {
+        return $this->morphTo();
+    }
+
+    public function comment()
+    {
+        return $this->morphTo();
+    }
 }
 

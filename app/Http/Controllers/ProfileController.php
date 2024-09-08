@@ -4,14 +4,27 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Photo;
+use App\Models\User;
 
 
 class ProfileController extends Controller
 {
-    public function show()
+    public function show($id)
     {
-        $data = [];
-        return response()->json($data, 200);
+        $user = User::with(['posts.comments', 'images'])->find($id);
+        
+        if ($user) {
+            return response()->json([
+                'success' => true,
+                'user' => $user
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found'
+            ]);
+        }
     }
 
 
@@ -44,5 +57,18 @@ class ProfileController extends Controller
     {
         $profile = Auth::user();
         return response()->json(['user' => $profile]);
+    }
+
+    public function getUserPhotos($id)
+    {
+        $photos = Photo::where('user_id', $id)->get();
+        $photos = $photos->map(function ($photo) {
+            return [
+                'id' => $photo->id,
+                'url' => asset('storage/' . $photo->image)
+            ];
+        });
+
+        return response()->json(['photos' => $photos]);
     }
 }
