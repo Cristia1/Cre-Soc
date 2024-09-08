@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Photo;
 use App\Models\User;
 
@@ -12,6 +13,7 @@ class ProfileController extends Controller
 {
     public function show($id)
     {
+        dd('sasas');
         $user = User::with(['posts.comments', 'images'])->find($id);
         
         if ($user) {
@@ -52,20 +54,22 @@ class ProfileController extends Controller
         return response()->json(['message' => 'Profile updated successfully.']);
     }
 
-    
-    public function biography()
-    {
-        $profile = Auth::user();
-        return response()->json(['user' => $profile]);
-    }
 
     public function getUserPhotos($id)
     {
         $photos = Photo::where('user_id', $id)->get();
+
         $photos = $photos->map(function ($photo) {
+            // Verificăm dacă fișierul există
+            if (Storage::exists($photo->image)) {
+                $url = Storage::url($photo->image);
+            } else {
+                $url = '/default-image.png'; // Imagine implicită dacă fișierul nu există
+            }
+
             return [
                 'id' => $photo->id,
-                'url' => asset('storage/' . $photo->image)
+                'url' => $url
             ];
         });
 
