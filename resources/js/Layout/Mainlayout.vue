@@ -74,6 +74,7 @@ export default {
     async logout() {
       try {
         await axios.post('/logout');
+        window.location.href = '';
         window.location.href = '/login';
       } catch (error) {
         console.error('Error during logout:', error);

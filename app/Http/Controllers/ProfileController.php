@@ -7,19 +7,20 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Photo;
 use App\Models\User;
+use App\Models\Profile;
 
 
 class ProfileController extends Controller
 {
     public function show($id)
     {
-        dd('sasas');
-        $user = User::with(['posts.comments', 'images'])->find($id);
-        
+        $profile = Profile::where('user_id', $id)->first();
+        $user = User::find($id);  
         if ($user) {
             return response()->json([
                 'success' => true,
-                'user' => $user
+                'user' => $user,
+                'profile' => $profile,
             ]);
         } else {
             return response()->json([
@@ -37,21 +38,35 @@ class ProfileController extends Controller
     }
 
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $user = Auth::user();
-
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
+            'city' => 'required|string|max:255',
+            'work' => 'required|string|max:255',
+            'birthdate' => 'required|date',
+            'marital_status' => 'required|in:single,married,divorced,widowed',
+            'education' => 'required|string|max:255',
+            'phone_number' => 'required|string|max:20',
+            'gender' => 'required|in:male,female',
+            'favorite_movies' => 'nullable|string',
+            'favorite_sports' => 'nullable|string',
+            'favorite_books' => 'nullable|string',
         ]);
 
-        $user->name = $request->name;
-        $user->email = $request->email;
+        $profile = Profile::where('user_id', $id)->first();
+        
+        if (!$profile) {
+            $profile = new Profile();
+            $profile->user_id = $id;
+        }
 
-        $user->save();
+        $profile->fill($request->all());
+        $profile->save();
 
-        return response()->json(['message' => 'Profile updated successfully.']);
+        return response()->json([
+            'success' => true,
+            'profile' => $profile
+        ]);
     }
 
 
@@ -60,11 +75,10 @@ class ProfileController extends Controller
         $photos = Photo::where('user_id', $id)->get();
 
         $photos = $photos->map(function ($photo) {
-            // Verificăm dacă fișierul există
             if (Storage::exists($photo->image)) {
                 $url = Storage::url($photo->image);
             } else {
-                $url = '/default-image.png'; // Imagine implicită dacă fișierul nu există
+                $url = '/default-image.png'; 
             }
 
             return [

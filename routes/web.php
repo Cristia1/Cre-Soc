@@ -40,9 +40,9 @@ Route::middleware(['api'])->group(function () {
     
     //Profiles Routes
         Route::get('/user/{id}/photos', [ProfileController::class, 'getUserPhotos']);
-        Route::get('/Profile', [ProfileController::class, 'show'])->name('show');
+        Route::get('/profile/{id}', [ProfileController::class, 'show']);
         Route::get('/Profile/edit', [ProfileController::class, 'edit'])->name('edit');
-        Route::post('/Profile/update', [ProfileController::class, 'update'])->name('update');  
+        Route::post('/profile/{id}', [ProfileController::class, 'update']); 
         Route::post('/Profile', [ProfileController::class, 'store'])->name('store');
     // End Routes
 

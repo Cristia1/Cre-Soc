@@ -1,19 +1,23 @@
 <template>
   <div class="profile1">
+    <!-- Photo Cover and Profile Photo -->
     <PhotoCover class="profile2"></PhotoCover>
     <PhotoProfil class="photo-profil"></PhotoProfil>
 
+    <!-- User Details -->
     <div class="details">
       <h1 class="UserName">{{ user.name }}</h1>
-      <p>{{ user.bio }}</p>
-      <p>{{ user.job }}</p>
-      <p>{{ user.school }}</p>
     </div>
-    <br><br><br><br>
+    <br><br><br>
 
-    <!-- Button for viewing all photos -->
-    <div class="photos-button">
-      <button @click="openGallery">Photos</button>
+    <!-- Button Group for "About" and "Photos" -->
+    <div class="button-group">
+      <div class="about-button">
+        <button @click="openAbout">About</button>
+      </div>
+      <div class="photos-button">
+        <button @click="openGallery">Photos</button>
+      </div>
     </div>
 
     <!-- User Posts -->
@@ -24,13 +28,78 @@
       </div>
     </div>
 
-    <!-- Gallery under the Photos button -->
+    <!-- Photo Gallery under the Photos button -->
     <div v-if="showGallery" class="photo-gallery">
       <div class="gallery">
         <img v-for="photo in photos" :key="photo.id" :src="photo.url" alt="User Photo" class="gallery-image">
       </div>
     </div>
-  </div>
+
+    <!-- About section, initially hidden -->
+    <div v-if="showAbout" class="about-section">
+      <div v-if="!isEditing">
+        <!-- Display profile information -->
+        <h3>Profile Information</h3>
+        <p><strong>City:</strong> {{ profile.city }}</p>
+        <p><strong>Work:</strong> {{ profile.work }}</p>
+        <p><strong>Birthdate:</strong> {{ profile.birthdate }}</p>
+        <p><strong>Marital Status:</strong> {{ profile.marital_status }}</p>
+        <p><strong>Education:</strong> {{ profile.education }}</p>
+        <p><strong>Phone Number:</strong> {{ profile.phone_number }}</p>
+        <p><strong>Gender:</strong> {{ profile.gender }}</p>
+        <p><strong>Favorite Movies:</strong> {{ profile.favorite_movies }}</p>
+        <p><strong>Favorite Sports:</strong> {{ profile.favorite_sports }}</p>
+        <p><strong>Favorite Books:</strong> {{ profile.favorite_books }}</p>
+        
+        <!-- Edit button -->
+        <button @click="toggleEdit">Edit</button>
+      </div>
+
+      <form v-if="isEditing" @submit.prevent="saveProfile">
+        <!-- Edit profile form -->
+        <label for="city">City:</label>
+        <input v-model="profile.city" type="text" id="city" required>
+        
+        <label for="work">Work:</label>
+        <input v-model="profile.work" type="text" id="work" required>
+        
+        <label for="birthdate">Birthdate:</label>
+        <input v-model="profile.birthdate" type="date" id="birthdate" required>
+        
+        <label for="marital_status">Marital Status:</label>
+        <select v-model="profile.marital_status" id="marital_status" required>
+          <option value="single">Single</option>
+          <option value="married">Married</option>
+          <option value="divorced">Divorced</option>
+          <option value="widowed">Widowed</option>
+        </select>
+        
+        <label for="education">Education:</label>
+        <input v-model="profile.education" type="text" id="education" required>
+        
+        <label for="phone_number">Phone Number:</label>
+        <input v-model="profile.phone_number" type="text" id="phone_number" required>
+        
+        <label for="gender">Gender:</label>
+        <select v-model="profile.gender" id="gender" required>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+        
+        <label for="favorite_movies">Favorite Movies:</label>
+        <textarea v-model="profile.favorite_movies" id="favorite_movies"></textarea>
+        
+        <label for="favorite_sports">Favorite Sports:</label>
+        <textarea v-model="profile.favorite_sports" id="favorite_sports"></textarea>
+        
+        <label for="favorite_books">Favorite Books:</label>
+        <textarea v-model="profile.favorite_books" id="favorite_books"></textarea>
+        
+        <button type="submit">Save Profile</button>
+        <button @click="cancelEdit" type="button">Cancel</button>
+      </form>
+    </div>
+  </div>  
 </template>
 
 <script>
@@ -52,21 +121,62 @@ export default {
         school: "",
         posts: []
       },
-      photos: [],    
+      profile: {    
+        city: '',
+        work: '',
+        birthdate: '',
+        marital_status: 'single', 
+        education: '',
+        phone_number: '',
+        gender: 'male',
+        favorite_movies: '',
+        favorite_sports: '',
+        favorite_books: ''
+      },
+      isEditing: false, 
+      profileSaved: false,
+      photos: [],
       showGallery: false,
+      showAbout: false, 
     };
   },
   async mounted() {
     try {
       const response = await axios.get('/user');
       this.user = response.data.user;
+      const profileResponse = await axios.get(`/profile/${this.user.id}`);
+      if (profileResponse.data.profile) {
+        this.profile = profileResponse.data.profile;
+      }
     } catch (error) {
-      console.error('Error fetching user profile:', error);
+      console.error('Error fetching user or profile data:', error);
     }
   },
   methods: {
+    toggleEdit() {
+      this.isEditing = true;
+    },
+    async saveProfile() {
+      try {
+        const response = await axios.post(`/profile/${this.user.id}`, this.profile);
+        if (response.data.success) {
+          alert('Profile saved successfully!');
+          this.profile = response.data.profile;
+          this.isEditing = false; 
+          this.profileSaved = true;
+        } else {
+          alert('Error saving profile.');
+        }
+      } catch (error) {
+        console.error('Error saving profile:', error);
+        alert('Error saving profile.');
+      }
+    },
+    cancelEdit() {
+      this.isEditing = false;
+    },
     async openGallery() {
-      if (!this.photos.length) {  // Fetch photos only if not already loaded
+      if (!this.photos.length) {  
         try {
           const response = await axios.get(`/user/${this.user.id}/photos`);
           this.photos = response.data.photos;
@@ -74,14 +184,15 @@ export default {
           console.error('Error fetching user photos:', error);
         }
       }
-      this.showGallery = !this.showGallery; // Toggle the gallery visibility
+      this.showGallery = !this.showGallery; 
+    },
+    openAbout() {
+      this.showAbout = !this.showAbout; 
     }
   }
 };
 </script>
 
-
 <style scoped>
 @import '@/Assets/Profile';
-
 </style>
