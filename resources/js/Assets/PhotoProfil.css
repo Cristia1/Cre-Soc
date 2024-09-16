@@ -17,7 +17,7 @@
     height: 150px;
     overflow: hidden;
     position: relative;
-    background-color: #f0f2f5; /* Adaugă un fundal similar cu cel de pe Facebook */
+    background-color: #f0f2f5;
 }
 
 .custom-file-upload input[type="file"] {

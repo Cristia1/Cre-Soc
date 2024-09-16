@@ -1,0 +1,62 @@
+.friends-preview-container {
+    padding: 10px;
+    margin-top: -42px;
+    margin-right: -80px;
+}
+
+.active-friends {
+    display: flex;
+    flex-direction: column;
+}
+
+.friend-list-preview {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+}
+
+.friend-preview-item {
+    margin-right: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.friend-preview-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.FriendsButton button {
+    color: black;
+    background-color: transparent;
+    cursor: pointer;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: underline;
+    margin: 0 10px;
+}
+
+.friends-container {
+    margin-top: 20px;
+}
+
+.friend-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.friend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.friend-profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}

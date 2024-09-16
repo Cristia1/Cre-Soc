@@ -1,30 +1,40 @@
 import { createApp } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
-// Components Reusaile
-import MainLayout from "../Layout/Mainlayout.vue";
-import Logout from "../Components/logout.vue";
-import Home from "../Components/Home.vue";
-import google from "../Components/google.vue"
-import InputError  from "../Components/InputError.vue";
-import UserId from "../Pages/Users/UserId.vue";
-//  End Components
+    // Components Reusaile
+        import MainLayout from "../Layout/Mainlayout.vue";
+        import Logout from "../Components/logout.vue";
+        import Home from "../Components/Home.vue";
+        import google from "../Components/google.vue"
+        import InputError  from "../Components/InputError.vue";
+        import UserId from "../Pages/Users/UserId.vue";
+    //  End Components
 
 
-// Components Photos
-import PhotoCover from "../Pages/Photos/PhotoCover.vue";
-import PhotoProfil from "../Pages/Photos/PhotoProfil.vue";
-// Ends
+    // Chat Componets
+        import MessageButton from "../Pages/Chats/MessageButton.vue";
+    // Ends Components
 
 
-// Profile Components
-import Profile from "../Pages/Profiles/Profile.vue";
-//  End Components
+    // Components Friends
+    import Friends from "../Pages/Friends/Friends.vue";
+    // End Components
+
+    
+    // Components Photos
+        import PhotoCover from "../Pages/Photos/PhotoCover.vue";
+        import PhotoProfil from "../Pages/Photos/PhotoProfil.vue";
+    // Ends
 
 
-// Components Likes
-import LikeButton from "../Pages/Likes/LikeButton.vue";
-// End Components
+    // Profile Components
+        import Profile from "../Pages/Profiles/Profile.vue";
+    //  End Components
+
+
+    // Components Likes
+        import LikeButton from "../Pages/Likes/LikeButton.vue";
+    // End Components
 
 
 const router = createRouter({
@@ -42,15 +52,15 @@ const router = createRouter({
         //  End Components
 
 
-        // Photos Components
         { path: '/PhotoProfil', component: PhotoProfil },
         { path: '/PhotoCover', component: PhotoCover },
-        // 
 
 
-        // Profile Components
         { path: '/Profile', component: Profile },
-        //  End Components
+
+        { path: '/LikeButton', component: LikeButton },
+        
+        { path: '/MessageButton', component: MessageButton },
     ]
 });
 

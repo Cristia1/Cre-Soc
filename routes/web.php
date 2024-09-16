@@ -14,6 +14,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\RecipientController;
 use App\Http\Controllers\SenderController;
+use App\Http\Controllers\FriendController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -29,9 +30,14 @@ Route::middleware(['api'])->group(function () {
         Route::post('/photos/{photo}/like', [LikeController::class, 'likePhoto'])->middleware('auth');
     // End Routes
 
+    // Friends Routes
+        Route::get('/friends', [FriendController::class, 'getFriends']);
+        Route::post('/friend-request/{friendId}', [FriendController::class, 'sendRequest']);
+        Route::post('/accept-request/{friendId}', [FriendController::class, 'acceptRequest']);
+    // End Routes
+
 
     // Like Routes
-        // Rute pentru like-uri, gestionate de LikeController
         Route::post('/like/{itemType}/{id}', [LikeController::class, 'like']);
         Route::delete('/unlike/{itemType}/{id}', [LikeController::class, 'unlike']);
         Route::get('/likes/{itemType}/{id}', [LikeController::class, 'getLikes']);
