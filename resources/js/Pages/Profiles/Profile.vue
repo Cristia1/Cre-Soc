@@ -23,12 +23,17 @@
         </div>
 
         <div class="FriendsButton">
-          <Friends :user_id="localUserId"></Friends>
+          <FriendsShowList :user_id="localUserId"></FriendsShowList>
         </div>
         
-        <button @click="sendMessage" class="sendMessage">
-          📩 Message
-        </button>
+        
+        <div class="Message1">
+          <MessageButton receiverId="Send">Messages</MessageButton>
+        </div>
+
+        <div class="Add">
+          <FriendRequest @update:Add-id="AddFriend" />
+        </div>
       </div>
 
     <!-- Photo Gallery under the Photos button -->
@@ -99,21 +104,28 @@
 import axios from 'axios';
 import PhotoCover from '../Photos/PhotoCover.vue';
 import PhotoProfil from '../Photos/PhotoProfil.vue';
-import Friends from '../Friends/Friends.vue';
+import FriendsShowList from '../Friends/FriendsShowList.vue';
+import MessageButton from '../Chats/MessageButton.vue';
+import FriendRequest from '../Friends/FriendRequest.vue';
 
 export default {
   components: {
     PhotoCover,
     PhotoProfil,
-    Friends,
+    FriendsShowList,
+    MessageButton,
+    FriendRequest,
   },
   props: {
+    messagesent: '',
     user_id: [String, Number],
     default: ''
   },
   data() {
     return {
       localUserId: '',
+      AddFriend: '',
+      Send: '',
       user: {
         name: "",
         bio: "",
@@ -145,6 +157,8 @@ export default {
       const response = await axios.get('/user');
       this.user = response.data.user;
       this.localUserId = this.user.id;
+      this.AddFriend = this.user.id;
+      this.Send = this.user.id;
       const profileResponse = await axios.get(`/profile/${this.user.id}`);
       if (profileResponse.data.profile) {
         this.profile = profileResponse.data.profile;
@@ -157,8 +171,6 @@ export default {
     toggleEdit() {
       this.isEditing = true;
     },
-      sendMessage() {
-      },
     async saveProfile() {
       try {
         const response = await axios.post(`/profile/${this.user.id}`, this.profile);
@@ -189,10 +201,9 @@ export default {
       }
       this.showGallery = !this.showGallery; 
     },
-  
     openAbout() {
       this.showAbout = !this.showAbout; 
-    }
+    },
   }
 };
 </script>

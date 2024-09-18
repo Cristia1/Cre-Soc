@@ -9,37 +9,35 @@ use Illuminate\Support\Facades\Auth;
 
 class FriendController extends Controller
 {
-    public function getFriends()
-    {
+    public function getFriends() {
         $user = Auth::user();
         $friends = $user->friends; 
         return response()->json($friends);
     }
+    
 
-
-    public function sendRequest($friendId)
+    public function sendRequest($friendId) 
     {
         $userId = Auth::id();
-        
         $existingRequest = Friend::where(function ($query) use ($userId, $friendId) {
             $query->where('user_id', $userId)->where('friend_id', $friendId);
-        })->orWhere(function ($query) use ($userId, $friendId) { $query->where('user_id', $friendId)
-                  ->where('friend_id', $userId);})->first();
-
+        })->orWhere(function ($query) use ($userId, $friendId) {
+            $query->where('user_id', $friendId)->where('friend_id', $userId);
+        })->first();
+    
         if ($existingRequest) {
-            return response()->json([
-                'message' => 'Friend request already exists or you are already friends.'
-            ], 400);
+            return response()->json(['message' => 'Friend request already exists or you are already friends.'], 400);
         }
-
+    
         $friendRequest = new Friend();
         $friendRequest->user_id = $userId;
         $friendRequest->friend_id = $friendId;
         $friendRequest->status = 'pending';
         $friendRequest->save();
-
+    
         return response()->json(['message' => 'Friend request sent successfully!'], 200);
     }
+    
 
 
     public function acceptRequest($friendId)
@@ -49,7 +47,7 @@ class FriendController extends Controller
                                 ->where('friend_id', $userId)
                                 ->where('status', 'pending')
                                 ->first();
-
+        // If is not valid or if is null 
         if (!$friendRequest) {
             return response()->json(['message' => 'Friend request not found.'], 404);
         }

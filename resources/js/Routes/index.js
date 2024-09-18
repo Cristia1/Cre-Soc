@@ -17,7 +17,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 
     // Components Friends
-    import Friends from "../Pages/Friends/Friends.vue";
+    import FriendsShowList from "../Pages/Friends/FriendsShowList.vue";
+    import FriendRequest from "../Pages/Friends/FriendRequest.vue";
     // End Components
 
     

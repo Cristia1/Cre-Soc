@@ -84,5 +84,5 @@ import axios from 'axios';
 
  
 <style scoped>
-@import '@/Assets/Friends';
+@import '@/Assets/FriendsShowList';
 </style>

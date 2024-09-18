@@ -3,21 +3,16 @@
     <header>
       <nav class="navbar navbar-expand-lg navbar-light rounded" style="background-color: #3d3d3d; margin-bottom: 10px; height: 40px;">
         <div class="container d-flex align-items-center justify-content-between">
+
           <!-- Logo -->
           <a class="navbar-brand" href="profile">
             <img src="/logo.png" alt="Logo" style="height: 40px;">
           </a>
 
-          <!-- Search bar search bar -->
+          <!-- Search bar -->
           <form class="form-inline my-2 my-lg-0" @submit.prevent="searchUsers">
             <div class="input-group">
-              <input
-                class="form-control search-input"
-                type="search"
-                placeholder="Search Social"
-                aria-label="Search"
-                v-model="searchQuery"
-              />
+              <input class="form-control search-input" type="search" placeholder="Search Social" aria-label="Search" v-model="searchQuery" />
               <div class="input-group-append">
                 <span class="input-group-text">
                   <i class="fas fa-search"></i>
@@ -26,12 +21,25 @@
             </div>
           </form>
 
+          <a href="/home" class="HOME">
+            <i class="fas fa-home" style="font-size:28px; color:black;"></i>
+          </a>
+
+          <a class="FRIENDS" href="/friends">
+            <i class='fas fa-user-friends' style='font-size:28px;color:black; '></i>
+          </a>
+
+          <a class="PROFILE" href="/profile">
+            <i class="fa fa-shopping-cart" style="font-size:28px; color:black;"></i>
+          </a>
+          
           <!-- The logout button -->
           <ul class="navbar-nav ml-auto">
             <div class="dropdown-menu dropdown-menu-right" :class="{ 'show': isDropdownOpen }">
               <button @click="logout" class="dropdown-item logout-button">Logout</button>
             </div>
           </ul>
+
         </div>
       </nav>
     </header>
@@ -40,7 +48,6 @@
       <div class="card-body">
         <div class="container-fluid">
           <div v-if="users.length > 0" class="search-results">
-            <!-- <h4>Search Results:</h4> -->
             <div v-for="user in users" :key="user.id" class="user-item">
               <img :src="user.profilUrl || '/default-profile.png'" alt="Profile" class="user-image" />
               <div class="user-details">
@@ -74,7 +81,7 @@ export default {
     async logout() {
       try {
         await axios.post('/logout');
-        window.location.href = '';
+        // window.location.href = '';
         window.location.href = '/login';
       } catch (error) {
         console.error('Error during logout:', error);
@@ -99,4 +106,22 @@ export default {
 
 <style scoped>
 @import '@/Assets/MainLayout';
+.HOME {
+  position: absolute; 
+  top: 10px; 
+  right: 900px; 
+  text-decoration: none;
+}
+.FRIENDS {
+  position: absolute; 
+  top: 10px; 
+  right: 800px; 
+  text-decoration: none;
+}
+.PROFILE {
+  position: absolute; 
+  top: 10px; 
+  right: 700px; 
+  text-decoration: none;
+}
 </style>
