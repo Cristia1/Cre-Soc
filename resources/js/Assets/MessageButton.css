@@ -1,29 +1,32 @@
-.sendMessage {
-    color: white;
-    background-color: #007bff;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 20px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-.sendMessage:hover {
-    background-color: #0056b3;
+.message-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 .message-input {
-    width: 100%;
-    height: 100px;
-    margin-bottom: 10px;
-    padding: 10px;
+    width: 40%;
+    height: 35px;
     border: 1px solid #ccc;
-    border-radius: 10px;
-    font-size: 14px;
-    resize: none;
+    padding: 5px;
+    box-sizing: border-box;
+    border-radius: 70px;
+    float: right;
+    margin-right: -104%;
+    margin-top: -2px;
 }
-/*  */
-/*  */
-/*  */
+
+.sendMessage {
+    width: auto;
+    background-color: #121315;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 30px;
+    float: right;
+    margin-right: -65%;
+    margin-top: -4px;
+}

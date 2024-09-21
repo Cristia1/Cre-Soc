@@ -23,12 +23,12 @@
         </div>
 
         <div class="FriendsButton">
-          <FriendsShowList :user_id="localUserId"></FriendsShowList>
+          <FriendsShowList :user_id="FriendsUserId"></FriendsShowList>
         </div>
         
         
-        <div class="Message1">
-          <MessageButton receiverId="Send">Messages</MessageButton>
+        <div v-if="localUserId" class="Message1">
+          <MessageButton :receiver-id="localUserId">Messages</MessageButton>
         </div>
 
         <div class="Add">
@@ -118,11 +118,13 @@ export default {
   },
   props: {
     messagesent: '',
-    user_id: [String, Number],
+    
     default: ''
   },
   data() {
     return {
+      userId: '',
+      FriendsUserId: '',
       localUserId: '',
       AddFriend: '',
       Send: '',
@@ -157,6 +159,7 @@ export default {
       const response = await axios.get('/user');
       this.user = response.data.user;
       this.localUserId = this.user.id;
+      this.FriendsUserId = this.user.id;
       this.AddFriend = this.user.id;
       this.Send = this.user.id;
       const profileResponse = await axios.get(`/profile/${this.user.id}`);

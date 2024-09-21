@@ -41,6 +41,7 @@ Route::middleware(['api'])->group(function () {
     // Message Rutes
         Route::post('/send-message', [MessageController::class, 'sendMessage']);
         Route::get('/messages/{receiver_id}', [MessageController::class, 'getMessages']);
+        Route::get('/current-user', function () { return response()->json(['id' => Auth::id()]);});
     // End
 
 

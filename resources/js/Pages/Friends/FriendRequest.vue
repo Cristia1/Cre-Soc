@@ -1,6 +1,7 @@
 <template>
-    <button @click="FriendsRequest(userId)" class="AddFriendButton">+Add</button>
+    <button @click="FriendsRequest(userId)" class="AddFriendButton hidden-button">+Add</button>
 </template>
+
 
 
 <script>
