@@ -1,0 +1,16 @@
+.profile-page {
+    padding: 20px;
+}
+.profile-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+.gallery {
+    display: flex;
+    gap: 10px;
+}
+.gallery-image {
+    width: 100px;
+    height: 100px;
+}

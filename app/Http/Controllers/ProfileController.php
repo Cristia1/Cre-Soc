@@ -12,24 +12,14 @@ use App\Models\Profile;
 
 class ProfileController extends Controller
 {
-    public function show($id)
-    {
-        $profile = Profile::where('user_id', $id)->first();
-        $user = User::find($id);  
-        if ($user) {
-            return response()->json([
-                'success' => true,
-                'user' => $user,
-                'profile' => $profile,
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'User not found'
-            ]);
-        }
+    public function show($id) {
+        $profile = Profile::find($id);
+        if ($profile) {
+            return response()->json(['profile' => $profile], 200);
+        } 
     }
-
+    
+    
 
     public function edit()
     {
@@ -38,34 +28,42 @@ class ProfileController extends Controller
     }
 
 
-    public function update(Request $request, $id)
+    public function store(Request $request)
     {
         $request->validate([
-            'city' => 'required|string|max:255',
-            'work' => 'required|string|max:255',
-            'birthdate' => 'required|date',
-            'marital_status' => 'required|in:single,married,divorced,widowed',
-            'education' => 'required|string|max:255',
-            'phone_number' => 'required|string|max:20',
-            'gender' => 'required|in:male,female',
+            'photo' => 'required|file|mimes:jpg,jpeg,png|max:2048', 
+            'title' => 'required|string|max:255',
+        ]);
+
+        $path = $request->file('photo')->store('photos');
+        return response()->json(['path' => $path], 201);
+    }
+
+
+    public function update(Request $request, $id)
+    {
+        $profile = Profile::where('user_id', $id)->first();
+        if (!$profile) {
+            return response()->json(['success' => false, 'message' => 'Profile not found']);
+        }
+
+        $validatedData = $request->validate([
+            'city' => 'nullable|string|max:255',
+            'work' => 'nullable|string|max:255',
+            'birthdate' => 'nullable|date',
+            'marital_status' => 'nullable|string',
+            'education' => 'nullable|string|max:255',
+            'phone_number' => 'nullable|string|max:15',
+            'gender' => 'nullable|string|in:male,female',
             'favorite_movies' => 'nullable|string',
             'favorite_sports' => 'nullable|string',
             'favorite_books' => 'nullable|string',
         ]);
 
-        $profile = Profile::where('user_id', $id)->first();
-        
-        if (!$profile) {
-            $profile = new Profile();
-            $profile->user_id = $id;
-        }
-
-        $profile->fill($request->all());
-        $profile->save();
-
+        $profile->update($validatedData);
         return response()->json([
             'success' => true,
-            'profile' => $profile
+            'profile' => $profile,
         ]);
     }
 
@@ -73,7 +71,7 @@ class ProfileController extends Controller
     public function getUserPhotos($id)
     {
         $photos = Photo::where('user_id', $id)->get();
-
+        
         $photos = $photos->map(function ($photo) {
             if (Storage::exists($photo->image)) {
                 $url = Storage::url($photo->image);

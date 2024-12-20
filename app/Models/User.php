@@ -19,6 +19,7 @@ class User extends Authenticatable
         'google_user_email',
     ];
 
+    
     protected $hidden = [
         'password', 'remember_token',
     ];
@@ -33,12 +34,27 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id');
     }
 
+    public function friendRequests()
+    {
+        return $this->hasMany(FriendRequest::class, 'user_id');
+    }
+    public function photos()
+    {
+        return $this->hasMany(Photo::class);
+    }
+
     public function photo()
     {
-        return $this->hasOne(Photo::class);
+        return $this->hasOne(Photo::class)->where('type', 'profil');
     }
 
     public function comments() {
         return $this->hasMany(Comment::class);
     }
+
+    public function profile()
+    {
+        return $this->hasOne(Profile::class, 'user_id', 'id');
+    }
+
 }

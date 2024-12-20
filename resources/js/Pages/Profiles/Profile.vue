@@ -3,7 +3,7 @@
     <PhotoCover class="profile2"></PhotoCover>
       <PhotoProfil class="photo-profil"></PhotoProfil>
 
-    <div class="details">
+    <div class="details" v-if="user">
       <h1 class="UserName">{{ user.name }}</h1>
     </div>
 
@@ -45,7 +45,7 @@
 
     <!-- About section, initially hidden -->
       <div v-if="showAbout" class="about-section">
-        <div v-if="!isEditing">
+        <div v-if="!isEditing ">
           <!-- Display profile information -->
           <h3>Profile Information</h3>
           <p><strong>City:</strong> {{ profile.city }}</p>
@@ -116,11 +116,6 @@ export default {
     MessageButton,
     FriendRequest,
   },
-  props: {
-    messagesent: '',
-    
-    default: ''
-  },
   data() {
     return {
       userId: '',
@@ -129,6 +124,7 @@ export default {
       AddFriend: '',
       Send: '',
       user: {
+        id: null,
         name: "",
         bio: "",
         job: "",
@@ -154,22 +150,46 @@ export default {
       showAbout: false,
     };
   },
-  async mounted() {
-    try {
-      const response = await axios.get('/user');
-      this.user = response.data.user;
-      this.localUserId = this.user.id;
-      this.FriendsUserId = this.user.id;
-      this.AddFriend = this.user.id;
-      this.Send = this.user.id;
-      const profileResponse = await axios.get(`/profile/${this.user.id}`);
-      if (profileResponse.data.profile) {
-        this.profile = profileResponse.data.profile;
+  watch: {
+  '$route.params.id': {
+    immediate: true,
+      handler(newId) {
+        if (newId) {
+          console.log("Detected new user ID:", newId);
+          this.fetchUserData(newId);
+        } else {
+          console.warn("No user ID provided. Falling back to current user.");
+          this.loadLoggedInUser();
+        }
       }
-    } catch (error) {
-      console.error('Error fetching user or profile data:', error);
     }
   },
+  async mounted() {
+    if (this.$route.params.id) {
+      await this.fetchUserData(this.$route.params.id);
+    } else {
+      this.loadLoggedInUser();
+    }
+    try {
+      const response = await axios.get('/user/${this.user?.id}');
+        if (response.data.user) {
+          this.user = response.data.user;
+          this.localUserId = this.user.id;
+          this.FriendsUserId = this.user.id;
+          this.AddFriend = this.user.id;
+          this.Send = this.user.id;
+        } else {
+          console.warn('User data not found.');
+        }
+
+            const profileResponse = await axios.get(`/profile/${this.user?.id}`, this.profile);
+              if (profileResponse.data.profile) {
+                this.profile = profileResponse.data.profile;
+              }
+          } catch (error) {
+            console.error('Error fetching user or profile data:', error);
+          }
+        },
   methods: {
     toggleEdit() {
       this.isEditing = true;
@@ -177,6 +197,7 @@ export default {
     async saveProfile() {
       try {
         const response = await axios.post(`/profile/${this.user.id}`, this.profile);
+        console.log('this.response');
         if (response.data.success) {
           alert('Profile saved successfully!');
           this.profile = response.data.profile;
@@ -194,7 +215,7 @@ export default {
       this.isEditing = false;
     },
     async openGallery() {
-      if (!this.photos.length) {  
+      if (!this.photos.length && this.user?.id) {  
         try {
           const response = await axios.get(`/user/${this.user.id}/photos`);
           this.photos = response.data.photos;
@@ -204,9 +225,35 @@ export default {
       }
       this.showGallery = !this.showGallery; 
     },
+
     openAbout() {
       this.showAbout = !this.showAbout; 
     },
+
+
+
+    async fetchUserData(userId) {
+      try {
+        const userResponse = await axios.get(`/user/${userId}`);
+        if (userResponse.data.user) {
+          this.user = userResponse.data.user;
+        }
+
+        if (this.user?.id) {
+          const profileResponse = await axios.get(`/profile/${userId}`);
+          console.log("Profile data fetched:", profileResponse.data);
+          this.profile = profileResponse.data.profile || {};
+
+          const photosResponse = await axios.get(`/user/${userId}/photos`);
+          this.photos = photosResponse.data.photos || {};
+
+          const detailsResponse = await axios.get(`/user/${userId}/profile`);
+          this.details = detailsResponse.data.details || {};
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    }
   }
 };
 </script>

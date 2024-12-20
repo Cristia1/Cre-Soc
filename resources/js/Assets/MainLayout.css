@@ -80,3 +80,23 @@
     margin: 0;
     color: #666;
 }
+/*  */
+/*  */
+.HOME {
+    position: absolute;
+    top: 10px;
+    right: 900px;
+    text-decoration: none;
+}
+.FRIENDS {
+    position: absolute;
+    top: 10px;
+    right: 800px;
+    text-decoration: none;
+}
+.PROFILE {
+    position: absolute;
+    top: 10px;
+    right: 700px;
+    text-decoration: none;
+}

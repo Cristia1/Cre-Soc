@@ -20,9 +20,16 @@ use Illuminate\Support\Facades\Auth;
 
 
 Route::middleware(['api'])->group(function () {
+    // Posts rutes
+        Route::get('/posts', [PostController::class, 'openPost']);
+    // Ends
+    
+    
     // Chats Routes
-        Route::get('/chat/{id}', [ChatController::class, 'index']); 
-        Route::post('/chat/create', [ChatController::class, 'createChat']);
+        Route::prefix('chat')->group(function () {
+            Route::get('/{id}', [ChatController::class, 'index']);
+            Route::post('/create', [ChatController::class, 'createChat']);
+        });
     // End Routes
 
 
@@ -62,21 +69,25 @@ Route::middleware(['api'])->group(function () {
     //Profiles Routes
         Route::get('/user/{id}/photos', [ProfileController::class, 'getUserPhotos']);
         Route::get('/profile/{id}', [ProfileController::class, 'show']);
-        Route::get('/Profile/edit', [ProfileController::class, 'edit'])->name('edit');
+        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('edit');
         Route::post('/profile/{id}', [ProfileController::class, 'update']); 
-        Route::post('/Profile', [ProfileController::class, 'store'])->name('store');
+        Route::post('/profile', [ProfileController::class, 'store'])->name('store');
     // End Routes
 
 
     // Users Routes
-    Route::get('/users', [UserController::class, 'index']);
-    Route::get('/users/{id}', [UserController::class, 'show']);
-    Route::put('/users/{id}', [UserController::class, 'update']);
-    Route::get('/user', [UserController::class, 'getUser']);
+        Route::get('/users', [UserController::class, 'index']);
+        Route::get('/users/{id}', [UserController::class, 'show']);
+        Route::put('/users/{id}', [UserController::class, 'update']);
+        Route::get('/user/{id}', [UserController::class, 'getUser']);
+        Route::get('/user/{id}/friends', [UserController::class, 'getFriends']);
+        Route::get('/users', [UserController::class, 'search']);
     // End Routes
 
 
     Route::post('/logout', [LoginController::class, 'logout']);
+    Route::get('/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+    Route::get('/google', [GoogleController::class, 'loginWithGoogle'])->name('google');
     Auth::routes();
     Route::get('{any}', function () {
         return view('home');
@@ -85,7 +96,5 @@ Route::middleware(['api'])->group(function () {
 
 
 Route::post('/login', [LoginController::class, 'login']);
-Route::get('/google/callback', [GoogleController::class, 'handleGoogleCallback']);
-Route::get('/google', [GoogleController::class, 'loginWithGoogle'])->name('google');
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);

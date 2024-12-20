@@ -16,11 +16,13 @@ class PhotoController extends Controller
         return response()->json($photos);
     }
 
+
     public function show($id)
     {
         $photo = Photo::findOrFail($id);
         return response()->json($photo);
     }
+
 
     public function store(Request $request)
     {
@@ -41,19 +43,15 @@ class PhotoController extends Controller
 
         $type = $request->input('type');
         $isPrimary = $request->input('is_primary', false); // default: false
-
-        // Dacă nu există altă imagine primară pentru acest tip, setăm imaginea curentă ca primară
         $existingPrimaryPhoto = Photo::where('user_id', $userId)->where('type', $type)->where('is_primary', true)->first();
         if (!$existingPrimaryPhoto) {
-            $isPrimary = true; // Setăm imaginea ca primară dacă nu există alta
+            $isPrimary = true; 
         }
 
         if ($isPrimary) {
-            // Dacă imaginea este marcată ca primară, facem celelalte imagini non-primare
             Photo::where('user_id', $userId)->where('type', $type)->update(['is_primary' => false]);
         }
 
-        // Salvăm noua imagine
         $photo = new Photo();
         $photo->user_id = $userId;
         $photo->type = $type;
@@ -67,8 +65,6 @@ class PhotoController extends Controller
     }
 
 
-
-    
     public function update(Request $request, $id)
     {
         $photo = Photo::findOrFail($id);
@@ -84,6 +80,7 @@ class PhotoController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Photo updated successfully.']);
     }
+
 
     public function destroy($id)
     {
@@ -107,7 +104,6 @@ class PhotoController extends Controller
     
         Storage::delete($photo->image);
         $photo->delete();
-    
         return response()->json(['success' => true, 'message' => 'Photo deleted successfully.']);
     }
     
@@ -133,6 +129,7 @@ class PhotoController extends Controller
             return response()->json(['success' => false, 'message' => 'No cover image found']);
         }
     }
+    
     
     public function PhotoProfil(): JsonResponse
     {

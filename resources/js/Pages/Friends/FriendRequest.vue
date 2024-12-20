@@ -12,8 +12,7 @@ export default {
     methods: {
         async FriendsRequest (userId) {
             try {
-                const response = await axios.post('/sendFriendRequest', { receiverId: userId });
-                alert('Friend request sent!');
+                const response = await axios.post('/sendRequest', { receiverId: userId });
             } catch (error) {
                 console.error('Error sending friend request:', error);
                 alert('Failed to send friend request');

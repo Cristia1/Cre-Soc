@@ -21,7 +21,7 @@
             </div>
           </form>
 
-          <a href="/home" class="HOME">
+          <!-- <a href="/home" class="HOME">
             <i class="fas fa-home" style="font-size:28px; color:black;"></i>
           </a>
 
@@ -31,7 +31,7 @@
 
           <a class="PROFILE" href="/profile">
             <i class="fa fa-shopping-cart" style="font-size:28px; color:black;"></i>
-          </a>
+          </a> -->
           
           <!-- The logout button -->
           <ul class="navbar-nav ml-auto">
@@ -48,7 +48,7 @@
       <div class="card-body">
         <div class="container-fluid">
           <div v-if="users.length > 0" class="search-results">
-            <div v-for="user in users" :key="user.id" class="user-item">
+            <div v-for="user in users" :key="user.id" class="user-item" @click="goToUserProfile(user.id)">
               <img :src="user.profilUrl || '/default-profile.png'" alt="Profile" class="user-image" />
               <div class="user-details">
                 <h5>{{ user.name }}</h5>
@@ -81,7 +81,6 @@ export default {
     async logout() {
       try {
         await axios.post('/logout');
-        // window.location.href = '';
         window.location.href = '/login';
       } catch (error) {
         console.error('Error during logout:', error);
@@ -98,30 +97,14 @@ export default {
       } catch (error) {
         console.error('Error during search:', error);
       }
+    },
+    goToUserProfile(userId) {
+      this.$router.push({ name: 'Profile', params: { id: userId } });
     }
-  }
+  },
 };
 </script>
 
-
 <style scoped>
 @import '@/Assets/MainLayout';
-.HOME {
-  position: absolute; 
-  top: 10px; 
-  right: 900px; 
-  text-decoration: none;
-}
-.FRIENDS {
-  position: absolute; 
-  top: 10px; 
-  right: 800px; 
-  text-decoration: none;
-}
-.PROFILE {
-  position: absolute; 
-  top: 10px; 
-  right: 700px; 
-  text-decoration: none;
-}
 </style>

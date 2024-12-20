@@ -36,7 +36,6 @@ export default {
       const authResponse = await axios.get('/current-user'); 
       if (authResponse.data && authResponse.data.id) {
         this.currentUserId = authResponse.data.id;
-        console.log('Current User ID:', this.currentUserId);
       } else {
         console.error('No user ID returned from /current-user endpoint');
       }

@@ -76,12 +76,6 @@ import axios from 'axios';
     },
   };
 </script>
-
-<style scoped>
-
-</style>
-
-
  
 <style scoped>
 @import '@/Assets/FriendsShowList';

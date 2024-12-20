@@ -41,11 +41,11 @@
       async toggleLike() {
         try {
           if (this.liked) {
-            await axios.delete(`/api/${this.itemType}/${this.itemId}/unlike`);
+            await axios.delete(`/${this.itemType}/${this.itemId}/unlike`);
             this.liked = false;
             this.likesCount--;
           } else {
-            await axios.post(`/api/${this.itemType}/${this.itemId}/like`);
+            await axios.post(`/${this.itemType}/${this.itemId}/like`);
             this.liked = true;
             this.likesCount++;
           }
