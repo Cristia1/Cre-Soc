@@ -26,7 +26,6 @@
           <FriendsShowList :user_id="FriendsUserId"></FriendsShowList>
         </div>
         
-        
         <div v-if="localUserId" class="Message1">
           <MessageButton :receiver-id="localUserId">Messages</MessageButton>
         </div>
@@ -61,41 +60,41 @@
           
           <!-- Edit button -->
           <button @click="toggleEdit">Edit</button>
-        </div>
+      </div>
 
-        <form v-if="isEditing" @submit.prevent="saveProfile">
-          <!-- Edit profile form -->
-          <label for="city">City:</label>
-          <input v-model="profile.city" type="text" id="city" required>
-          <label for="work">Work:</label>
-          <input v-model="profile.work" type="text" id="work" required>
-          <label for="birthdate">Birthdate:</label>
-          <input v-model="profile.birthdate" type="date" id="birthdate" required>
-          <label for="marital_status">Marital Status:</label>
-          <select v-model="profile.marital_status" id="marital_status" required>
-            <option value="single">Single</option>
-            <option value="married">Married</option>
-            <option value="divorced">Divorced</option>
-            <option value="widowed">Widowed</option>
-          </select>
-          <label for="education">Education:</label>
-          <input v-model="profile.education" type="text" id="education" required>
-          <label for="phone_number">Phone Number:</label>
-          <input v-model="profile.phone_number" type="text" id="phone_number" required>
-          <label for="gender">Gender:</label>
-          <select v-model="profile.gender" id="gender" required>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-          <label for="favorite_movies">Favorite Movies:</label>
-          <textarea v-model="profile.favorite_movies" id="favorite_movies"></textarea>
-          <label for="favorite_sports">Favorite Sports:</label>
-          <textarea v-model="profile.favorite_sports" id="favorite_sports"></textarea>
-          <label for="favorite_books">Favorite Books:</label>
-          <textarea v-model="profile.favorite_books" id="favorite_books"></textarea>
-          <button type="submit">Save Profile</button>
-          <button @click="cancelEdit" type="button">Cancel</button>
-        </form>
+      <form v-if="isEditing" @submit.prevent="saveProfile">
+        <!-- Edit profile form -->
+        <label for="city">City:</label>
+        <input v-model="profile.city" type="text" id="city" required>
+        <label for="work">Work:</label>
+        <input v-model="profile.work" type="text" id="work" required>
+        <label for="birthdate">Birthdate:</label>
+        <input v-model="profile.birthdate" type="date" id="birthdate" required>
+        <label for="marital_status">Marital Status:</label>
+        <select v-model="profile.marital_status" id="marital_status" required>
+          <option value="single">Single</option>
+          <option value="married">Married</option>
+          <option value="divorced">Divorced</option>
+          <option value="widowed">Widowed</option>
+        </select>
+        <label for="education">Education:</label>
+        <input v-model="profile.education" type="text" id="education" required>
+        <label for="phone_number">Phone Number:</label>
+        <input v-model="profile.phone_number" type="text" id="phone_number" required>
+        <label for="gender">Gender:</label>
+        <select v-model="profile.gender" id="gender" required>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+        <label for="favorite_movies">Favorite Movies:</label>
+        <textarea v-model="profile.favorite_movies" id="favorite_movies"></textarea>
+        <label for="favorite_sports">Favorite Sports:</label>
+        <textarea v-model="profile.favorite_sports" id="favorite_sports"></textarea>
+        <label for="favorite_books">Favorite Books:</label>
+        <textarea v-model="profile.favorite_books" id="favorite_books"></textarea>
+        <button type="submit">Save Profile</button>
+        <button @click="cancelEdit" type="button">Cancel</button>
+      </form>
     </div>
   </div>  
 </template>
@@ -171,7 +170,7 @@ export default {
       this.loadLoggedInUser();
     }
     try {
-      const response = await axios.get('/user/${this.user?.id}');
+      const response = await axios.get('/user');
         if (response.data.user) {
           this.user = response.data.user;
           this.localUserId = this.user.id;
@@ -181,15 +180,14 @@ export default {
         } else {
           console.warn('User data not found.');
         }
-
-            const profileResponse = await axios.get(`/profile/${this.user?.id}`, this.profile);
-              if (profileResponse.data.profile) {
-                this.profile = profileResponse.data.profile;
-              }
-          } catch (error) {
-            console.error('Error fetching user or profile data:', error);
+        const profileResponse = await axios.get(`/profile/${this.userId}`, this.profile);
+          if (profileResponse.data.profile) {
+            this.profile = profileResponse.data.profile;
           }
-        },
+      } catch (error) {
+        console.error('Error fetching user or profile data:', error);
+      }
+    },
   methods: {
     toggleEdit() {
       this.isEditing = true;
@@ -197,7 +195,6 @@ export default {
     async saveProfile() {
       try {
         const response = await axios.post(`/profile/${this.user.id}`, this.profile);
-        console.log('this.response');
         if (response.data.success) {
           alert('Profile saved successfully!');
           this.profile = response.data.profile;
@@ -225,30 +222,39 @@ export default {
       }
       this.showGallery = !this.showGallery; 
     },
-
-    openAbout() {
+    async openAbout() {
       this.showAbout = !this.showAbout; 
+
+      if (this.user?.id) {
+        try {
+          const profileResponse = await axios.get(`/profile/${this.userId}`);
+          if (profileResponse.data.profile) {
+            this.profile = profileResponse.data.profile;
+          }
+        } catch (error) {
+          console.error('Error fetching profile data:', error);
+        }
+      }
     },
-
-
-
     async fetchUserData(userId) {
       try {
         const userResponse = await axios.get(`/user/${userId}`);
+
         if (userResponse.data.user) {
-          this.user = userResponse.data.user;
+          this.user = userResponse.data.user; 
         }
 
         if (this.user?.id) {
           const profileResponse = await axios.get(`/profile/${userId}`);
-          console.log("Profile data fetched:", profileResponse.data);
-          this.profile = profileResponse.data.profile || {};
+        if (profileResponse.data.profile) {
+          this.profile = profileResponse.data.profile; 
+        }
 
-          const photosResponse = await axios.get(`/user/${userId}/photos`);
-          this.photos = photosResponse.data.photos || {};
+        const photosResponse = await axios.get(`/user/${userId}/photos`);
+        this.photos = photosResponse.data.photos || [];
 
           const detailsResponse = await axios.get(`/user/${userId}/profile`);
-          this.details = detailsResponse.data.details || {};
+          this.details = detailsResponse.data.details || [];
         }
       } catch (error) {
         console.error('Error fetching user data:', error);

@@ -12,13 +12,14 @@ use App\Models\Profile;
 
 class ProfileController extends Controller
 {
-    public function show($id) {
+    public function show($id) 
+    {
         $profile = Profile::find($id);
+
         if ($profile) {
             return response()->json(['profile' => $profile], 200);
         } 
     }
-    
     
 
     public function edit()
