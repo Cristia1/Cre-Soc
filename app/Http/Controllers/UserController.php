@@ -32,11 +32,13 @@ class UserController extends Controller
 
     public function show($id)
     {
+
         $user = User::with(['profile', 'photos', 'friends', 'posts'])->find($id);
+
         if (!$user) {
             return response()->json(['success' => false, 'message' => 'User not found'], 404);
         }
-
+        
         return response()->json([
             'success' => true,
             'user' => $user,

@@ -3,8 +3,8 @@
     <PhotoCover class="profile2"></PhotoCover>
       <PhotoProfil class="photo-profil"></PhotoProfil>
 
-    <div class="details" v-if="user">
-      <h1 class="UserName">{{ user.name }}</h1>
+      <div class="details" v-if="user">
+      <h1 class="UserName">{{ user.name }}</h1> 
     </div>
 
     <br><br><br>
@@ -45,8 +45,7 @@
     <!-- About section, initially hidden -->
       <div v-if="showAbout" class="about-section">
         <div v-if="!isEditing ">
-          <!-- Display profile information -->
-          <h3>Profile Information</h3>
+
           <p><strong>City:</strong> {{ profile.city }}</p>
           <p><strong>Work:</strong> {{ profile.work }}</p>
           <p><strong>Birthdate:</strong> {{ profile.birthdate }}</p>
@@ -59,7 +58,7 @@
           <p><strong>Favorite Books:</strong> {{ profile.favorite_books }}</p>
           
           <!-- Edit button -->
-          <button @click="toggleEdit">Edit</button>
+        <button @click="toggleEdit">Edit</button>
       </div>
 
       <form v-if="isEditing" @submit.prevent="saveProfile">
@@ -150,12 +149,11 @@ export default {
     };
   },
   watch: {
-  '$route.params.id': {
-    immediate: true,
+    '$route.params.id': {
+      immediate: true,
       handler(newId) {
         if (newId) {
-          console.log("Detected new user ID:", newId);
-          this.fetchUserData(newId);
+          this.fetchUserData(newId); 
         } else {
           console.warn("No user ID provided. Falling back to current user.");
           this.loadLoggedInUser();
@@ -164,37 +162,48 @@ export default {
     }
   },
   async mounted() {
-    if (this.$route.params.id) {
-      await this.fetchUserData(this.$route.params.id);
-    } else {
-      this.loadLoggedInUser();
-    }
     try {
-      const response = await axios.get('/user');
-        if (response.data.user) {
-          this.user = response.data.user;
-          this.localUserId = this.user.id;
-          this.FriendsUserId = this.user.id;
-          this.AddFriend = this.user.id;
-          this.Send = this.user.id;
-        } else {
-          console.warn('User data not found.');
-        }
-        const profileResponse = await axios.get(`/profile/${this.userId}`, this.profile);
-          if (profileResponse.data.profile) {
-            this.profile = profileResponse.data.profile;
-          }
-      } catch (error) {
-        console.error('Error fetching user or profile data:', error);
+      let userId = this.$route.params.id || this.user?.id;
+      if (this.$route.params.id) {
+        userId = this.$route.params.id; 
+      } else {
+        await this.loadLoggedInUser(); 
+        userId = this.user.id;  
       }
-    },
+
+      if (!userId) {
+        throw new Error('User ID is not available');
+      }
+
+      const userResponse = await axios.get(`/user/${userId}`);
+      if (userResponse.data.user) {
+        this.user = userResponse.data.user;
+        this.localUserId = this.user.id;
+        this.FriendsUserId = this.user.id;
+        this.AddFriend = this.user.id;
+        this.Send = this.user.id;
+      } else {
+        console.warn('User data not found.');
+      }
+
+      const profileResponse = await axios.get(`/profile/${userId}`);
+      if (profileResponse.data.profile) {
+        this.profile = profileResponse.data.profile;
+      } else {
+        console.warn('Profile data not found.');
+      }
+
+    } catch (error) {
+      console.error('Error fetching user or profile data:', error);
+    }
+  },
   methods: {
     toggleEdit() {
       this.isEditing = true;
     },
     async saveProfile() {
       try {
-        const response = await axios.post(`/profile/${this.user.id}`, this.profile);
+        const response = await axios.head(`/profile/${this.user.id}`, this.profile);
         if (response.data.success) {
           alert('Profile saved successfully!');
           this.profile = response.data.profile;

@@ -108,13 +108,14 @@ class PhotoController extends Controller
     }
     
 
-    public function PhotoCover(): JsonResponse
+    public function PhotoCover(Request $request): JsonResponse
     {
-        $userId = auth()->id();
+        $userId = $request->query('id', auth()->id()); 
         $photo = Photo::where('user_id', $userId)
                     ->where('type', 'cover')
-                    ->where('is_primary', true) 
+                    ->where('is_primary', true)
                     ->first();
+        
         if (!$photo) {
             $photo = Photo::where('user_id', $userId)
                         ->where('type', 'cover')
@@ -131,25 +132,27 @@ class PhotoController extends Controller
     }
     
     
-    public function PhotoProfil(): JsonResponse
+    public function PhotoProfil(Request $request): JsonResponse
     {
-        $userId = auth()->id();
+        $userId = $request->query('id', auth()->id()); 
         $photo = Photo::where('user_id', $userId)
                     ->where('type', 'profil')
                     ->where('is_primary', true) 
                     ->first();
+
         if (!$photo) {
             $photo = Photo::where('user_id', $userId)
                         ->where('type', 'profil')
                         ->orderBy('created_at', 'desc')
                         ->first();
         }
-    
+
         if ($photo) {
-            $profilUrl = Storage::url($photo->image);
+            $profilUrl = Storage::url($photo->image) . '?t=' . time(); 
             return response()->json(['success' => true, 'profilUrl' => $profilUrl]);
         } else {
             return response()->json(['success' => false, 'message' => 'No profile image found']);
         }
     }
+
 }

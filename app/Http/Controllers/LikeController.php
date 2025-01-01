@@ -56,7 +56,6 @@ class LikeController extends Controller
             'cover' => Photo::class,
             'post' => Post::class,
             'comment' => Comment::class,
-            // Adaugă alte tipuri de itemuri aici.
         ];
 
         return $models[$itemType] ?? abort(404, 'Invalid item type');

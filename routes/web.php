@@ -70,18 +70,18 @@ Route::middleware(['api'])->group(function () {
         Route::get('/user/{id}/photos', [ProfileController::class, 'getUserPhotos']);
         Route::get('/profile/{id}', [ProfileController::class, 'show']);
         Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('edit');
-        Route::post('/profile/{id}', [ProfileController::class, 'update']); 
+        Route::post('/profile/{id}/update', [ProfileController::class, 'update']);
         Route::post('/profile', [ProfileController::class, 'store'])->name('store');
     // End Routes
 
 
     // Users Routes
         Route::get('/users', [UserController::class, 'index']);
-        Route::get('/users/{id}', [UserController::class, 'show']);
-        Route::put('/users/{id}', [UserController::class, 'update']);
-        Route::get('/user/{id}', [UserController::class, 'getUser']);
-        Route::get('/user/{id}/friends', [UserController::class, 'getFriends']);
-        Route::get('/users', [UserController::class, 'search']);
+        Route::get('/users/search', [UserController::class, 'search']);
+        Route::get('/user/{id}', [UserController::class, 'show']);
+        Route::get('/user/{id}/profile', [UserController::class, 'getUser'])->middleware('auth');
+        Route::put('/user/{id}/update', [UserController::class, 'update']);
+        Route::get('/user/{id}/friends', [UserController::class, 'getFriends'])->middleware('auth');
     // End Routes
 
 

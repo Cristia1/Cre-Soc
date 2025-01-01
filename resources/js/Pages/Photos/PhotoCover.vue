@@ -80,12 +80,18 @@ export default {
         this.errorMessage = 'Error uploading image';
       }
     },
+
+
+
     async fetchUserPhoto(type) {
+      let userId = this.$route.params.id || this.user?.id;
       try {
-        const response = await axios.get(`/PhotoCover`);
+        const response = await axios.get(`/PhotoCover`, {
+          params: { id: userId }, 
+        }); 
         if (response.data.success === false) {
-          this.coverUrl = null; 
-          localStorage.removeItem('coverUrl'); 
+          this.coverUrl = null;
+          localStorage.removeItem('coverUrl');
           this.errorMessage = 'No image found';
         } else {
           const coverUrl = `${response.data.coverUrl}?t=${new Date().getTime()}`;
@@ -93,7 +99,7 @@ export default {
           this.photoId = response.data.photoId; 
           this.initialLiked = response.data.liked; 
           this.initialLikesCount = response.data.likesCount; 
-          localStorage.setItem('coverUrl', coverUrl); 
+          localStorage.setItem('coverUrl', coverUrl);
           this.errorMessage = '';
         }
       } catch (error) {
@@ -101,6 +107,8 @@ export default {
         this.errorMessage = 'Error fetching user photo';
       }
     },
+
+
     handleUserIdReceived(userId) {
       this.userId = userId;
       this.fetchUserPhoto('cover'); 

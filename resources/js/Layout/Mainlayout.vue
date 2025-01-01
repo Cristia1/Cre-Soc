@@ -5,7 +5,7 @@
         <div class="container d-flex align-items-center justify-content-between">
 
           <!-- Logo -->
-          <a class="navbar-brand" href="profile">
+          <a class="navbar-brand" href="Home">
             <img src="/logo.png" alt="Logo" style="height: 40px;">
           </a>
 
@@ -21,11 +21,11 @@
             </div>
           </form>
 
-          <!-- <a href="/home" class="HOME">
+          <!-- <a href="/home" class="Home">
             <i class="fas fa-home" style="font-size:28px; color:black;"></i>
-          </a>
+          </a> -->
 
-          <a class="FRIENDS" href="/friends">
+          <!-- <a class="FRIENDS" href="/friends">
             <i class='fas fa-user-friends' style='font-size:28px;color:black; '></i>
           </a>
 

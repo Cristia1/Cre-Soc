@@ -68,15 +68,17 @@ export default {
       }
     },
     async fetchUserPhoto(type) {
+      let userId = this.$route.params.id || this.user?.id;  
       try {
-        const response = await axios.get(`/PhotoProfil`);
+        const response = await axios.get(`/PhotoProfil`, {
+          params: { id: userId },  
+        });
+
         if (response.data.success === false) {
-          // If the image is found
-          this.profilUrl = null; 
-          localStorage.removeItem('profilUrl'); 
+          this.profilUrl = null;
+          localStorage.removeItem('profilUrl');
           this.errorMessage = 'No image found';
         } else {
-          // If the image is found
           const profilUrl = `${response.data.profilUrl}?t=${new Date().getTime()}`;
           this.profilUrl = profilUrl;
           localStorage.setItem('profilUrl', profilUrl); 
@@ -86,8 +88,7 @@ export default {
         console.error('Error fetching user photo:', error);
         this.errorMessage = 'Error fetching user photo';
       }
-    },
-    
+    },    
     handleUserIdReceived(userId) {
       this.userId = userId;
       this.fetchUserPhoto('profil'); 
