@@ -91,7 +91,7 @@
         <textarea v-model="profile.favorite_sports" id="favorite_sports"></textarea>
         <label for="favorite_books">Favorite Books:</label>
         <textarea v-model="profile.favorite_books" id="favorite_books"></textarea>
-        <button type="submit">Save Profile</button>
+        <button type="submit"  @click="saveProfile">Save Profile</button>
         <button @click="cancelEdit" type="button">Cancel</button>
       </form>
     </div>
@@ -202,19 +202,42 @@ export default {
       this.isEditing = true;
     },
     async saveProfile() {
+      const method = this.profile.id ? 'put' : 'post';
+      const url = this.profile.id
+        ? `/profile/${this.profile.id}`
+        : '/profile';
+
+      const dataToSend = {
+        city: this.profile.city,
+        work: this.profile.work,
+        birthdate: this.profile.birthdate,
+        marital_status: this.profile.marital_status,
+        education: this.profile.education,
+        phone_number: this.profile.phone_number,
+        gender: this.profile.gender,
+        favorite_movies: this.profile.favorite_movies,
+        favorite_sports: this.profile.favorite_sports,
+        favorite_books: this.profile.favorite_books,
+      };
+
       try {
-        const response = await axios.head(`/profile/${this.user.id}`, this.profile);
+        const response = await axios[method](url, dataToSend);
         if (response.data.success) {
-          alert('Profile saved successfully!');
+          // alert('Profile updated successfully!');
           this.profile = response.data.profile;
-          this.isEditing = false; 
-          this.profileSaved = true;
+          this.isEditing = false;
         } else {
-          alert('Error saving profile.');
+          alert('Error updating profile.');
         }
       } catch (error) {
-        console.error('Error saving profile:', error);
-        alert('Error saving profile.');
+        if (error.response) {
+          console.error('Validation errors:', error.response.data.errors);
+          alert(`Validation errors: ${JSON.stringify(error.response.data.errors)}`);
+        } else if (error.request) {
+          console.error('Request error:', error.request);
+        } else {
+          console.error('Error:', error.message);
+        }
       }
     },
     cancelEdit() {
@@ -232,21 +255,27 @@ export default {
       this.showGallery = !this.showGallery; 
     },
     async openAbout() {
-      this.showAbout = !this.showAbout; 
+      this.showAbout = !this.showAbout;
+      try {
+        const profileResponse = await axios.get(`/profile/${this.userId}`, {
+          headers: {
+            Accept: "application/json",
+          },
+        });
 
-      if (this.user?.id) {
-        try {
-          const profileResponse = await axios.get(`/profile/${this.userId}`);
-          if (profileResponse.data.profile) {
-            this.profile = profileResponse.data.profile;
-          }
-        } catch (error) {
-          console.error('Error fetching profile data:', error);
+        if (profileResponse.data.success) {
+          this.profile = profileResponse.data.profile;
         }
+      } catch (error) {
+        console.error("Eroare la fetch-ul profilului:", error);
       }
+    },
+    openPost() {
+      console.log('Se posteaza');
     },
     async fetchUserData(userId) {
       try {
+        
         const userResponse = await axios.get(`/user/${userId}`);
 
         if (userResponse.data.user) {

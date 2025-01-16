@@ -12,13 +12,14 @@ use App\Models\Profile;
 
 class ProfileController extends Controller
 {
-    public function show($id) 
+    public function show($id)
     {
-        $profile = Profile::find($id);
-
+        $profile = Profile::where('user_id', $id)->first();
         if ($profile) {
-            return response()->json(['profile' => $profile], 200);
-        } 
+            return response()->json(['success' => true, 'profile' => $profile], 200);
+        }
+        
+        return response()->json(['success' => false, 'message' => 'Profile not found'], 404);
     }
     
 
@@ -31,70 +32,91 @@ class ProfileController extends Controller
 
     public function store(Request $request)
     {
+        if ($request->has('photo')) {
+            $request->validate([
+                'photo' => 'required|file|mimes:jpg,jpeg,png|max:2048',
+                'title' => 'required|string|max:255',
+            ]);
+
+            $photoPath = $request->file('photo')->store('photos', 'public');
+            Photo::create([
+                'title' => $request->title,
+                'photo_path' => $photoPath,
+                'user_id' => auth()->id(),
+            ]);
+
+            return response()->json(['success' => true, 'message' => 'Photo uploaded successfully']);
+        }
+
         $request->validate([
-            'photo' => 'required|file|mimes:jpg,jpeg,png|max:2048', 
-            'title' => 'required|string|max:255',
             'city' => 'nullable|string|max:255',
             'work' => 'nullable|string|max:255',
             'birthdate' => 'nullable|date',
-            'marital_status' => 'nullable|string',
+            'marital_status' => 'nullable|string|in:single,married,divorced,widowed',
             'education' => 'nullable|string|max:255',
-            'phone_number' => 'nullable|string|max:15',
+            'phone_number' => 'nullable|string|max:20',
             'gender' => 'nullable|string|in:male,female',
             'favorite_movies' => 'nullable|string',
             'favorite_sports' => 'nullable|string',
             'favorite_books' => 'nullable|string',
         ]);
-    
-        $path = $request->file('photo')->store('photos');
-        $profile = Profile::create([
-            'user_id' => Auth::id(), 
-            'photo' => $path,
-            'title' => $request->title,
-            'city' => $request->city,
-            'work' => $request->work,
-            'birthdate' => $request->birthdate,
-            'marital_status' => $request->marital_status,
-            'education' => $request->education,
-            'phone_number' => $request->phone_number,
-            'gender' => $request->gender,
-            'favorite_movies' => $request->favorite_movies,
-            'favorite_sports' => $request->favorite_sports,
-            'favorite_books' => $request->favorite_books,
-        ]);
-        return response()->json(['success' => true, 'profile' => $profile], 201);
+
+        $profile = Profile::updateOrCreate(
+            ['user_id' => auth()->id()],
+            $request->only([
+                'city', 'work', 'birthdate', 'marital_status', 'education',
+                'phone_number', 'gender', 'favorite_movies', 'favorite_sports', 'favorite_books',
+            ])
+        );
+
+        return response()->json(['success' => true, 'profile' => $profile]);
     }
+
     
 
     public function update(Request $request, $id)
     {
-        $profile = Profile::where('user_id', $id)->first();
+        if ($request->has('photo')) {
+            $request->validate([
+                'photo' => 'required|file|mimes:jpg,jpeg,png|max:2048',
+                'title' => 'required|string|max:255',
+            ]);
 
-        if (!$profile) {
-            return response()->json(['success' => false, 'message' => 'Profile not found'], 404);
+            $profile = Profile::findOrFail($id);
+            $photoPath = $request->file('photo')->store('photos', 'public');
+            
+            $profile->update([
+                'photo_path' => $photoPath,
+                'title' => $request->title,
+            ]);
+
+            return response()->json(['success' => true, 'message' => 'Photo updated successfully', 'profile' => $profile]);
         }
 
-        $validatedData = $request->validate([
+        $request->validate([
             'city' => 'nullable|string|max:255',
             'work' => 'nullable|string|max:255',
             'birthdate' => 'nullable|date',
-            'marital_status' => 'nullable|string',
+            'marital_status' => 'nullable|string|in:single,married,divorced,widowed',
             'education' => 'nullable|string|max:255',
-            'phone_number' => 'nullable|string|max:15',
+            'phone_number' => 'nullable|string|max:20',
             'gender' => 'nullable|string|in:male,female',
             'favorite_movies' => 'nullable|string',
             'favorite_sports' => 'nullable|string',
             'favorite_books' => 'nullable|string',
         ]);
 
-        $profile->update($validatedData);
+        $profile = Profile::findOrFail($id);
 
-        return response()->json([
-            'success' => true,
-            'profile' => $profile,
-        ]);
+        $profile->update($request->only([
+            'city', 'work', 'birthdate', 'marital_status', 'education',
+            'phone_number', 'gender', 'favorite_movies', 'favorite_sports', 'favorite_books',
+        ]));
+
+        return response()->json(['success' => true, 'message' => 'Profile updated successfully', 'profile' => $profile]);
     }
 
+    
 
     public function getUserPhotos($id)
     {

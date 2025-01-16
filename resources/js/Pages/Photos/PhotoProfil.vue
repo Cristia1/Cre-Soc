@@ -49,7 +49,6 @@ export default {
 
       try {
         const response = await axios.post('/photo', formData);
-        console.log(this.response);
         if (response.data.success === false) {
           // If the image is found
           this.profilUrl = null; 

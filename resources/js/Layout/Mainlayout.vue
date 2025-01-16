@@ -5,7 +5,7 @@
         <div class="container d-flex align-items-center justify-content-between">
 
           <!-- Logo -->
-          <a class="navbar-brand" href="Home">
+          <a class="navbar-brand" href="http://127.0.0.1:8000/Home">
             <img src="/logo.png" alt="Logo" style="height: 40px;">
           </a>
 
@@ -21,24 +21,56 @@
             </div>
           </form>
 
-          <!-- <a href="/home" class="Home">
+          <!-- Navigation icons -->
+          <a href="http://127.0.0.1:8000/Home" class="HOME">
             <i class="fas fa-home" style="font-size:28px; color:black;"></i>
-          </a> -->
+          </a> 
 
-          <!-- <a class="FRIENDS" href="/friends">
-            <i class='fas fa-user-friends' style='font-size:28px;color:black; '></i>
+          <a class="FRIENDS" href="http://127.0.0.1:8000/MainLayout">
+            <i class="fas fa-user-friends" style="font-size:28px;color:black;"></i>
           </a>
 
-          <a class="PROFILE" href="/profile">
+          <a class="PROFILE" href="http://127.0.0.1:8000/Profile">
             <i class="fa fa-shopping-cart" style="font-size:28px; color:black;"></i>
-          </a> -->
-          
-          <!-- The logout button -->
-          <ul class="navbar-nav ml-auto">
-            <div class="dropdown-menu dropdown-menu-right" :class="{ 'show': isDropdownOpen }">
-              <button @click="logout" class="dropdown-item logout-button">Logout</button>
+          </a>
+
+          <!-- Notification icon -->
+          <div class="notification-bell" @click="toggleNotifications">
+            <i class="fas fa-bell"></i>
+            <span class="notification-count" v-if="notificationCount > 0">{{ notificationCount }}</span>
+            <div v-if="showNotifications" class="notification-dropdown">
+              <div v-if="notifications.length === 0">No new notifications.</div>
+              <ul>
+                <li v-for="notification in notifications" :key="notification.id">
+                  {{ notification.text }}
+                </li>
+              </ul>
             </div>
-          </ul>
+          </div>
+
+          <!-- Messenger icon -->
+          <div class="messenger-icon" @click="toggleMessenger">
+            <i class="fas fa-comment-dots"></i>
+            <span class="message-count" v-if="messageCount > 0">{{ messageCount }}</span>
+            <div v-if="showMessenger" class="messenger-dropdown">
+              <div v-if="messages.length === 0">No new messages.</div>
+              <ul>
+                <li v-for="message in messages" :key="message.id">
+                  <strong>{{ message.sender_name }}</strong>: {{ message.content }}
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Profile icon -->
+          <div class="navbar-right" v-if="profilUrl">
+            <div class="profil-image" @click="toggleDropdown">
+              <img :src="profilUrl" alt="Profile" class="rounded-circle" />
+            </div>
+            <div class="dropdown-menu dropdown-menu-right" :class="{ 'show': isDropdownOpen }">
+              <!-- <button @click="logout" class="dropdown-item logout-button">Logout</button> -->
+            </div>
+          </div>
 
         </div>
       </nav>
@@ -72,9 +104,39 @@ export default {
       isDropdownOpen: false,
       searchQuery: '',
       users: [],
+      id: null,
+      profilUrl: '',
+      isDropdownOpen: false, 
+      notificationCount: '', 
+      messageCount: '', 
     };
   },
+  async created() {
+    try {
+      const response = await axios.get('/PhotoProfil');
+      
+      if (response.data.success) {
+        const baseUrl = window.location.origin;
+        this.profilUrl = response.data.profilUrl.startsWith('http')
+          ? response.data.profilUrl
+          : `${baseUrl}${response.data.profilUrl}`;
+      } else {
+        console.error('Error fetching profile photo:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching profile photo:', error);
+    }
+  },
   methods: {
+    toggleDropdown() {
+      this.isDropdownOpen = !this.isDropdownOpen;
+    },
+    openNotifications() {
+      console.log('Opening notifications...');
+    },
+    openMessenger() {
+      this.showMessenger = !this.showMessenger;
+    },
     toggleDropdown() {
       this.isDropdownOpen = !this.isDropdownOpen;
     },

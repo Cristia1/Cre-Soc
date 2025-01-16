@@ -70,8 +70,8 @@ Route::middleware(['api'])->group(function () {
         Route::get('/user/{id}/photos', [ProfileController::class, 'getUserPhotos']);
         Route::get('/profile/{id}', [ProfileController::class, 'show']);
         Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('edit');
-        Route::post('/profile/{id}/update', [ProfileController::class, 'update']);
-        Route::post('/profile', [ProfileController::class, 'store'])->name('store');
+        Route::put('/profile/{id}', [ProfileController::class, 'update']);
+        Route::post('/profile', [ProfileController::class, 'store']);
     // End Routes
 
 

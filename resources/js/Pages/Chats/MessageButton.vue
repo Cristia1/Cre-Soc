@@ -54,7 +54,7 @@ export default {
           receiver_id: this.receiverId, 
           content: this.messageContent,  
         });
-
+        
         if (response.data.success) {
           console.log('Message successfully sent:', response.data.message);
           alert('Message sent successfully!');
