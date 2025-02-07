@@ -19,7 +19,7 @@ use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Auth;
 
 
-Route::middleware(['api'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     // Posts rutes
         Route::get('/posts', [PostController::class, 'openPost']);
     // Ends
@@ -48,14 +48,16 @@ Route::middleware(['api'])->group(function () {
     // Message Rutes
         Route::post('/send-message', [MessageController::class, 'sendMessage']);
         Route::get('/messages/{receiver_id}', [MessageController::class, 'getMessages']);
-        Route::get('/current-user', function () { return response()->json(['id' => Auth::id()]);});
+        Route::get('/user-messages', [MessageController::class, 'UserMessages']);
     // End
 
 
     // Friends Routes
         Route::get('/friends', [FriendController::class, 'getFriends']);
-        Route::post('/friendRequest/{friendId}', [FriendController::class, 'sendRequest']);
-        Route::post('/friendRequest/accept/{friendId}', [FriendController::class, 'acceptRequest']);
+        Route::get('/getFriendRequests', [FriendController::class, 'getFriendRequests']);
+        Route::post('/sendRequest', [FriendController::class, 'sendRequest']);
+        Route::post('/acceptRequest', [FriendController::class, 'acceptRequest']);
+        Route::post('/deleteRequest', [FriendController::class, 'deleteRequest']);
     // End Routes
 
 
@@ -95,6 +97,7 @@ Route::middleware(['api'])->group(function () {
 });
 
 
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);

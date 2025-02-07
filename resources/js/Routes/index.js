@@ -55,7 +55,7 @@ const routes = [
     { path: '/like-button', component: LikeButton },
 
     // Message Components
-    { path: '/message-button', component: MessageButton },
+
 ];
 
 // Create the router instance

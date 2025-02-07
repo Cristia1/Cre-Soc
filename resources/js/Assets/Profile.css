@@ -14,11 +14,18 @@
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
+/*  */
 /* Name  */
 .details {
     margin-left: 500px;
     margin-top: 30px;
 }
+/*  */
+/* Message button */
+.Send {
+    margin-top: -100px;
+}
+
 /* Styling for the profile image */
 .photo-profil {
     position: relative;
@@ -117,7 +124,7 @@
     display: flex;
     justify-content: center;
     margin: 20px 0;
-    margin-left: -300px;
+    margin-left: -20px;
 }
 
 .photos-button,
@@ -161,3 +168,55 @@
 }
 /*  */
 /*  */
+/* Messenger Icon */
+/*  */
+/* Notification Bell */
+.notification1-bell {
+    margin-left: 1288px;
+    margin-top: -34px;
+    position: relative;
+    font-size: 29px;
+    cursor: pointer;
+    color: #ecedf0;
+}
+
+.notification1-bell .notification1-count {
+    position: absolute;
+    top: 0;
+    right: 55px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    font-size: 29px;
+    padding: 2px 6px;
+    font-weight: bold;
+    display: block;
+    min-width: 20px;
+    text-align: center;
+}
+
+/*  */
+/* Messenger Icon  */
+.messenger1-icon {
+    font-size: 24px;
+    cursor: pointer;
+    color: #dfe4ea;
+    font-size: 30px;
+    margin-left: 1243px;
+    margin-top: -120px;
+    display: block;
+}
+.messenger1-icon .message1-count {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 100px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    font-size: 20px;
+    padding: 2px 6px;
+    font-weight: bold;
+    min-width: 20px;
+    text-align: center;
+}

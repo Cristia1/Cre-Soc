@@ -1,4 +1,32 @@
 <template>
+  <div class="messenger1-icon" @click="toggleMessenger">
+    <i class="fas fa-comment-dots"></i>
+    <span class="message1-count" v-if="messageCount > 0">{{ messageCount }}</span>
+    <div v-if="showMessenger" class="messenger1-dropdown">
+      <div v-if="messages.length === 0">No new messages.</div>
+      <ul>
+        <li v-for="message in messages" :key="message.id">
+          <strong>{{ message.sender_name }}</strong>: {{ message.content }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="notification1-bell" @click="toggleNotifications">
+    <i class="fas fa-bell"></i>
+    <span class="notification1-count" v-if="notificationCount > 0">{{ notificationCount }}</span>
+    <div v-if="showNotifications" class="notification1-dropdown">
+      <div v-if="notifications.length === 0">No new notifications.</div>
+      <ul>
+        <li v-for="notification in notifications" :key="notification.id">
+          {{ notification.text }}
+        </li>
+      </ul>
+    </div>
+  </div>
+  <br><br><br>
+  <br><br>
+<!-- Down is profile -->
   <div class="profile1">
     <PhotoCover class="profile2"></PhotoCover>
       <PhotoProfil class="photo-profil"></PhotoProfil>
@@ -26,15 +54,15 @@
           <FriendsShowList :user_id="FriendsUserId"></FriendsShowList>
         </div>
         
-        <div v-if="localUserId" class="Message1">
+        <div v-if="localUserId" class="Send">
           <MessageButton :receiver-id="localUserId">Messages</MessageButton>
         </div>
 
         <div class="Add">
-          <FriendRequest @update:Add-id="AddFriend" />
+          <FriendRequest :receiverId="profileUserId" @update:AddId="handleFriendRequest" />
         </div>
       </div>
-
+      <AcceptRequest />
     <!-- Photo Gallery under the Photos button -->
       <div v-if="showGallery" class="photo-gallery">
         <div class="gallery">
@@ -105,6 +133,7 @@ import PhotoProfil from '../Photos/PhotoProfil.vue';
 import FriendsShowList from '../Friends/FriendsShowList.vue';
 import MessageButton from '../Chats/MessageButton.vue';
 import FriendRequest from '../Friends/FriendRequest.vue';
+import AcceptRequest from '../Friends/AcceptRequest.vue';
 
 export default {
   components: {
@@ -113,12 +142,22 @@ export default {
     FriendsShowList,
     MessageButton,
     FriendRequest,
+    AcceptRequest,
   },
   data() {
     return {
+      messageContent: '',  
+      messages: [],
+      showMessenger: false,
+      messageCount: 0,
+      // 
       userId: '',
+      // 
       FriendsUserId: '',
-      localUserId: '',
+      localUserId: null,
+      receiverId: null, 
+      // 
+      messageContent: '', 
       AddFriend: '',
       Send: '',
       user: {
@@ -146,6 +185,10 @@ export default {
       photos: [],
       showGallery: false,
       showAbout: false,
+      // 
+      notificationCount: '', 
+      messageCount: '', 
+      showNotifications: '',
     };
   },
   watch: {
@@ -197,7 +240,63 @@ export default {
       console.error('Error fetching user or profile data:', error);
     }
   },
+  
   methods: {
+    toggleMessenger() {
+    this.showMessenger = !this.showMessenger;
+  },
+  async fetchMessages() {
+    try {
+      const response = await axios.get('/user-messages');
+      if (response.data.success && response.data.messages) {
+        this.messages = response.data.messages.map((message) => ({
+          id: message.id,
+          content: message.content,
+          sender_name: message.sender.name,
+          sender_id: message.sender.id,
+        }));
+        this.messageCount = response.data.messages.length; 
+      } else {
+        console.error('No messages returned from /user-messages endpoint');
+      }
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  },
+    openNotifications() {
+      console.log('Opening notifications...');
+    },
+    openMessenger() {
+      this.showMessenger = !this.showMessenger;
+    },
+
+
+    async LocalUserId(userId) {
+      console.log('megees');
+      try {
+        const response = await fetch('/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`, 
+          },
+          body: JSON.stringify({
+            receiver_id: this.receiverId,
+            content: this.messageContent,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to send the message');
+        }
+
+        const data = await response.json();
+        console.log('Message sent successfully:', data);
+        this.messageContent = ''; 
+      } catch (error) {
+        console.error('Error sending message:', error);
+      }
+    },
     toggleEdit() {
       this.isEditing = true;
     },

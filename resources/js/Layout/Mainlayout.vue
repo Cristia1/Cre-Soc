@@ -34,41 +34,15 @@
             <i class="fa fa-shopping-cart" style="font-size:28px; color:black;"></i>
           </a>
 
-          <!-- Notification icon -->
-          <div class="notification-bell" @click="toggleNotifications">
-            <i class="fas fa-bell"></i>
-            <span class="notification-count" v-if="notificationCount > 0">{{ notificationCount }}</span>
-            <div v-if="showNotifications" class="notification-dropdown">
-              <div v-if="notifications.length === 0">No new notifications.</div>
-              <ul>
-                <li v-for="notification in notifications" :key="notification.id">
-                  {{ notification.text }}
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Messenger icon -->
-          <div class="messenger-icon" @click="toggleMessenger">
-            <i class="fas fa-comment-dots"></i>
-            <span class="message-count" v-if="messageCount > 0">{{ messageCount }}</span>
-            <div v-if="showMessenger" class="messenger-dropdown">
-              <div v-if="messages.length === 0">No new messages.</div>
-              <ul>
-                <li v-for="message in messages" :key="message.id">
-                  <strong>{{ message.sender_name }}</strong>: {{ message.content }}
-                </li>
-              </ul>
-            </div>
-          </div>
-
           <!-- Profile icon -->
           <div class="navbar-right" v-if="profilUrl">
             <div class="profil-image" @click="toggleDropdown">
               <img :src="profilUrl" alt="Profile" class="rounded-circle" />
-            </div>
-            <div class="dropdown-menu dropdown-menu-right" :class="{ 'show': isDropdownOpen }">
-              <!-- <button @click="logout" class="dropdown-item logout-button">Logout</button> -->
+                </div>
+            
+            <!-- Dropdown pentru Logout -->
+                <div class="dropdown-menu dropdown-menu-right" :class="{ 'show': isDropdownOpen }">
+              <button @click="logout" class="dropdown-item logout-button">Logout</button>
             </div>
           </div>
 
@@ -106,9 +80,7 @@ export default {
       users: [],
       id: null,
       profilUrl: '',
-      isDropdownOpen: false, 
-      notificationCount: '', 
-      messageCount: '', 
+      receivertId: '',
     };
   },
   async created() {
@@ -126,18 +98,16 @@ export default {
     } catch (error) {
       console.error('Error fetching profile photo:', error);
     }
+    document.addEventListener('click', this.handleOutsideClick);
   },
+
+  beforeDestroy() {
+    document.removeEventListener('click', this.handleOutsideClick);
+  },
+
   methods: {
-    toggleDropdown() {
-      this.isDropdownOpen = !this.isDropdownOpen;
-    },
-    openNotifications() {
-      console.log('Opening notifications...');
-    },
-    openMessenger() {
-      this.showMessenger = !this.showMessenger;
-    },
-    toggleDropdown() {
+    toggleDropdown(event) {
+      event.stopPropagation(); 
       this.isDropdownOpen = !this.isDropdownOpen;
     },
     async logout() {
@@ -158,6 +128,17 @@ export default {
         this.users = response.data.users; 
       } catch (error) {
         console.error('Error during search:', error);
+      }
+    },
+    handleOutsideClick(event) {
+      const dropdown = this.$el.querySelector('.dropdown-menu');
+      const profilImage = this.$el.querySelector('.profil-image');
+      if (
+        dropdown && 
+        !dropdown.contains(event.target) && 
+        !profilImage.contains(event.target)
+      ) {
+        this.isDropdownOpen = false;
       }
     },
     goToUserProfile(userId) {

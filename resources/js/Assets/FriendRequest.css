@@ -1,19 +1,17 @@
 .AddFriendButton {
-    background-color: #1877f2;
-    color: white;
+    position: relative;
+    background-color: #4a58ef;
+    color: rgb(238, 228, 228);
     border: none;
-    border-radius: 5px;
+    border-radius: 30px;
     padding: 10px 20px;
-    font-size: 16px;
+    font-size: 13px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-right: -100%;
+    margin-left: -500px;
+    top: -189px;
 }
 
 .AddFriendButton:hover {
     background-color: #145dbf;
-    float: left;
-}
-.hidden-button {
-    visibility: hidden;
 }

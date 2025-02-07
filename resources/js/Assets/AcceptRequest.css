@@ -1,0 +1,24 @@
+.friend-request {
+    position: fixed;
+    top: 40px;
+    right: 420px;
+    padding: 1px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.accept-button {
+    background: green;
+    color: white;
+    padding: 5px 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.delete-button {
+    background: red;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+}

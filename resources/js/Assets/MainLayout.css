@@ -1,8 +1,17 @@
 .dropdown-menu {
+    display: none;
     position: absolute;
-    right: 0;
+    top: 50px;
+    border-radius: 5px;
+    padding: 10px 0;
+    z-index: 1000;
 }
 
+.dropdown-menu.show {
+    display: block;
+}
+/*  */
+/*  */
 .navbar {
     border-radius: 9px;
     left: 3px;
@@ -10,7 +19,8 @@
     margin-left: -07px;
     margin-top: -5px;
 }
-
+/*  */
+/* Profile */
 .Profile {
     background-color: #bc2e2e;
     color: #333;
@@ -104,8 +114,8 @@
 /*  */
 /* MainLayout Picture User */
 .navbar-right {
-    margin-left: 1333px;
-    margin-top: -36px;
+    margin-left: 1330px;
+    margin-top: -97px;
     display: flex;
 }
 
@@ -114,54 +124,4 @@
     height: 35px;
     border-radius: 50%;
     object-fit: cover;
-}
-
-/*  */
-/* Notification Bell */
-.notification-bell {
-    margin-left: 1295px;
-    margin-top: -92px;
-    position: relative;
-    font-size: 26px;
-    cursor: pointer;
-    color: #ecedf0;
-}
-
-.notification-bell .notification-count {
-    position: absolute;
-    top: 0;
-    right: 55px;
-    background-color: red;
-    color: white;
-    border-radius: 50%;
-    font-size: 30px;
-    padding: 2px 6px;
-    font-weight: bold;
-    display: inline-block;
-    min-width: 20px;
-    text-align: center;
-}
-
-/*  */
-/* Messenger Icon  */
-.messenger-icon {
-    font-size: 24px;
-    cursor: pointer;
-    color: #dfe4ea;
-    font-size: 30px;
-    margin-left: 1248px;
-    margin-top: -32px;
-}
-.messenger-icon .message-count {
-    position: absolute;
-    top: 0;
-    right: 100px;
-    background-color: red;
-    color: white;
-    border-radius: 50%;
-    font-size: 12px;
-    padding: 2px 6px;
-    font-weight: bold;
-    min-width: 20px;
-    text-align: center;
 }
