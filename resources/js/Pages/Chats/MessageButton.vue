@@ -58,7 +58,7 @@ export default {
         const response = await axios.get('/user-messages'); 
           if (response.data.success && response.data.messages) {
             this.messages = response.data.messages
-            // .filter((message) => message.sender.id !== this.currentUserId) 
+            .filter((message) => message.sender.id !== this.currentUserId) 
             .map((message) => ({
               id: message.id,
               content: message.content,

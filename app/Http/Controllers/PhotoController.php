@@ -148,7 +148,7 @@ class PhotoController extends Controller
         }
 
         if ($photo) {
-            $profilUrl = Storage::url($photo->image) . '?t=' . time(); 
+            $profilUrl = url(Storage::url($photo->image)) . '?t=' . time();
             return response()->json(['success' => true, 'profilUrl' => $profilUrl]);
         } else {
             return response()->json(['success' => false, 'message' => 'No profile image found']);

@@ -3,7 +3,7 @@
     <i class="fas fa-comment-dots"></i>
     <span class="message1-count" v-if="messageCount > 0">{{ messageCount }}</span>
     <div v-if="showMessenger" class="messenger1-dropdown">
-      <div v-if="messages.length === 0">No new messages.</div>
+      <div v-if="notifications.length === 0">No new notifications.</div>
       <ul>
         <li v-for="message in messages" :key="message.id">
           <strong>{{ message.sender_name }}</strong>: {{ message.content }}
@@ -16,7 +16,7 @@
     <i class="fas fa-bell"></i>
     <span class="notification1-count" v-if="notificationCount > 0">{{ notificationCount }}</span>
     <div v-if="showNotifications" class="notification1-dropdown">
-      <div v-if="notifications.length === 0">No new notifications.</div>
+      <div v-if="notifications.length === 0">Notifications.</div>
       <ul>
         <li v-for="notification in notifications" :key="notification.id">
           {{ notification.text }}
@@ -58,11 +58,13 @@
           <MessageButton :receiver-id="localUserId">Messages</MessageButton>
         </div>
 
-        <div class="Add">
-          <FriendRequest :receiverId="profileUserId" @update:AddId="handleFriendRequest" />
+        <div v-if="localUserId">
+          <FriendRequest :userId="user.id" />
         </div>
       </div>
-      <AcceptRequest />
+
+      <AcceptRequest v-if="localUserId" :userId="localUserId" />
+      
     <!-- Photo Gallery under the Photos button -->
       <div v-if="showGallery" class="photo-gallery">
         <div class="gallery">
@@ -146,6 +148,7 @@ export default {
   },
   data() {
     return {
+      loggedInUserId: '',
       messageContent: '',  
       messages: [],
       showMessenger: false,
@@ -205,21 +208,29 @@ export default {
     }
   },
   async mounted() {
+   
     try {
       let userId = this.$route.params.id || this.user?.id;
+      this.targetUserId = userId; 
+      
+      if (userId) {
+        this.userId = userId; 
+      } else {
+        console.warn('User ID is not available');
+      }
+
       if (this.$route.params.id) {
         userId = this.$route.params.id; 
+        this.friendRequestUserId = this.$route.params.id;
       } else {
         await this.loadLoggedInUser(); 
         userId = this.user.id;  
       }
 
-      if (!userId) {
-        throw new Error('User ID is not available');
-      }
-
       const userResponse = await axios.get(`/user/${userId}`);
       if (userResponse.data.user) {
+        this. loggedInUserId = userResponse.data.user.id;
+        this.currentUserId = userResponse.data.user.id;
         this.user = userResponse.data.user;
         this.localUserId = this.user.id;
         this.FriendsUserId = this.user.id;
@@ -341,6 +352,7 @@ export default {
     },
     cancelEdit() {
       this.isEditing = false;
+      this.fetchUserData(this.user.id);
     },
     async openGallery() {
       if (!this.photos.length && this.user?.id) {  
@@ -371,6 +383,9 @@ export default {
     },
     openPost() {
       console.log('Se posteaza');
+    },
+    handleFriendRequestSent(friendId) {
+        alert(`The friend request has been sent to the user with the ID ${friendId}`);
     },
     async fetchUserData(userId) {
       try {

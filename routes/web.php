@@ -53,11 +53,11 @@ Route::middleware(['auth'])->group(function () {
 
 
     // Friends Routes
-        Route::get('/friends', [FriendController::class, 'getFriends']);
-        Route::get('/getFriendRequests', [FriendController::class, 'getFriendRequests']);
         Route::post('/sendRequest', [FriendController::class, 'sendRequest']);
+        Route::get('/getFriendRequests', [FriendController::class, 'getFriendRequests']);
         Route::post('/acceptRequest', [FriendController::class, 'acceptRequest']);
         Route::post('/deleteRequest', [FriendController::class, 'deleteRequest']);
+        Route::get('/getFriends', [FriendController::class, 'getFriends']);
     // End Routes
 
 

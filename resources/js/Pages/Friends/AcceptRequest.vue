@@ -1,9 +1,11 @@
 <template>
-  <div class="friend-requests" v-if="requests.length > 0">
-    <div v-for="request in requests" :key="request.id" class="request-alert">
-      <p>{{ request.sender.name }} ți-a trimis o cerere de prietenie</p>
-      <button @click="acceptRequest(request.id, request.sender.id)">Accept</button>
-      <button @click="deleteRequest(request.id)">Delete</button>
+  <div>
+    <div class="friend-request" v-if="requests.length > 0">
+      <div v-for="request in requests" :key="request.id">
+        <p>{{ request.sender.name }} sent you a friend request</p>
+        <button class="accept-button" @click="acceptRequest(request.sender.id)">Accept</button>
+        <button class="delete-button" @click="deleteRequest(request.id)">Delete</button>
+      </div>
     </div>
   </div>
 </template>
@@ -14,54 +16,41 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      requests: [], 
-      loggedInUserId: null, 
+      requests: [],
     };
   },
   async mounted() {
-    await this.getUserId(); 
-    await this.fetchRequests(); 
+    await this.fetchRequests();
   },
   methods: {
-    // 🔹 1. Obține ID-ul utilizatorului logat
-    async getUserId() {
-      try {
-        const response = await axios.get('/getAuthenticatedUser'); 
-        this.loggedInUserId = response.data.id; 
-      } catch (error) {
-        console.error('Eroare la preluarea utilizatorului:', error);
-      }
-    },
     async fetchRequests() {
       try {
         const response = await axios.get('/getFriendRequests');
-        this.requests = response.data.filter(req => req.receiver_id === this.loggedInUserId); 
+        this.requests = response.data;
       } catch (error) {
-        console.error('Eroare la preluarea cererilor:', error);
+        console.error('Error fetching friend requests:', error);
       }
     },
-    async acceptRequest(requestId, senderId) {
+    async acceptRequest(senderId) {
       try {
-        await axios.post('/acceptRequest', { sender_id: senderId });
-        this.requests = this.requests.filter(req => req.id !== requestId);
-        this.$emit('friendAccepted', senderId);
+        const response = await axios.post('/acceptRequest', { sender_id: senderId });
+        this.requests = this.requests.filter(request => request.sender.id !== senderId);
       } catch (error) {
-        console.error('Eroare la acceptarea cererii:', error);
+        console.error('Error accepting request:', error);
       }
     },
     async deleteRequest(requestId) {
       try {
         await axios.post('/deleteRequest', { request_id: requestId });
-        this.requests = this.requests.filter(req => req.id !== requestId);
+        this.fetchRequests();
       } catch (error) {
-        console.error('Eroare la ștergerea cererii:', error);
+        console.error('Error deleting request:', error);
       }
     }
   }
 };
 </script>
-  
-  <style scoped>
-    @import "@/Assets/AcceptRequest";
-  </style>
-  
+
+<style scoped>
+  @import "@/Assets/AcceptRequest";
+</style>

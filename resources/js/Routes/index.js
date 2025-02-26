@@ -18,6 +18,7 @@ import MessageButton from "../Pages/Chats/MessageButton.vue";
 // Friends Components
 import FriendsShowList from "../Pages/Friends/FriendsShowList.vue";
 import FriendRequest from "../Pages/Friends/FriendRequest.vue";
+import AcceptRequest from "../Pages/Friends/AcceptRequest.vue";
 
 // Photos Components
 import PhotoCover from "../Pages/Photos/PhotoCover.vue";
@@ -54,7 +55,10 @@ const routes = [
     // Likes Components
     { path: '/like-button', component: LikeButton },
 
-    // Message Components
+    // Friends Components
+    { path: "/AcceptRequest", component: AcceptRequest },
+    { path: "/FriendRequest", component: FriendRequest },
+    { path: "/FriendsShowList", component: FriendsShowList },
 
 ];
 
